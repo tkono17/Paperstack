@@ -9,13 +9,13 @@ class DocumentType(Enum):
 class Document(BaseModel):
     id: int
     name: str
-    #author: str
-    #title: str
-    #documentType: str
-    #tags: list[str]
-    #arxivId: Optional[str]
-    #doi: Optional[str]
-    #reference: Optional[str]
+    author: str
+    title: str
+    documentType: str
+    tags: list[str] = None
+    arxivId: Optional[str] = None
+    doi: Optional[str] = None
+    reference: Optional[str] = None
 
 class DocumentCollection(BaseModel):
     id: int
