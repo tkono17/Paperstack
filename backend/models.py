@@ -11,7 +11,7 @@ class Document(BaseModel):
     name: str
     author: str
     title: str
-    documentType: str
+    documentTypeId: int
     tags: list[str] = None
     arxivId: Optional[str] = None
     doi: Optional[str] = None

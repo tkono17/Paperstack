@@ -26,6 +26,11 @@ def openDb(fname):
 
 def createTables(cursor):
     print('Create tables')
+
+    cursor.execute("""CREATE TABLE DocumentType(
+    id INTEGER,
+    name STRING)""")
+    
     cursor.execute("""CREATE TABLE Document(
     id INTEGER,
     name STRING,
@@ -37,10 +42,29 @@ def createTables(cursor):
     doi STRING,
     reference STRING)""")
     
+    cursor.execute("""CREATE TABLE DocumentCollection(
+    id INTEGER,
+    name STRING,
+    query1_field STRING
+    query1_operation STRING
+    query1_value STRING
+    query2_field STRING
+    query2_operation STRING
+    query2_value STRING
+    query3_field STRING
+    query3_operation STRING
+    query3_value STRING
+    )""")
+    
 def checkTables(cursor):
     print('Check tables')
     cursor.execute('SELECT name FROM sqlite_master')
     print(cursor.fetchall() )
+
+def deleteTables(conn):
+    conn.cursor().execute('DROP TABLE IF EXISTS DocumentType')
+    conn.cursor().execute('DROP TABLE IF EXISTS Document')
+    conn.cursor().execute('DROP TABLE IF EXISTS DocumentCollection')
 
 def run(args):
     conn = openDb(args.filename)
@@ -48,7 +72,8 @@ def run(args):
         print(f'Failed to connect to the database file {args.filename}')
         return
     if args.clearTables:
-        conn.cursor().execute('DROP TABLE Document')
+        deleteTables(conn)
+
     createTables(conn.cursor())
     checkTables(conn.cursor())
     
