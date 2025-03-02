@@ -6,7 +6,7 @@
 # DocumentCollection (Base, Public, Create, Update)
 #-----------------------------------------------------------------------
 from enum import Enum
-from typing import Optional
+from typing import List, Optional
 from pydantic import BaseModel
 from sqlmodel import SQLModel, Field
 
@@ -16,16 +16,16 @@ class Config(BaseModel):
 #-----------------------------------------------------
 # DocType
 #-----------------------------------------------------
-class DocTypeBase(SQLModel):
-    name: str
+#class DocTypeBase(SQLModel):
+#    name: str
 
-class DocType(DocTypeBase, table=True):
-    id: int = Field(index=True)
+#class DocType(DocTypeBase, table=True):
+#    id: int = Field(index=True)
 
-DocTypeCreate = DocTypeBase
+#DocTypeCreate = DocTypeBase
 
-class DocTypeUpdate(DocTypeBase):
-    name: str | None = None
+#class DocTypeUpdate(DocTypeBase):
+#    name: str | None = None
 
 #-----------------------------------------------------
 # Document
@@ -65,10 +65,10 @@ class DocumentUpdate(DocumentBase):
 #-----------------------------------------------------
 # DocCollection
 #-----------------------------------------------------
-class DocCollectionBase(SQLModel):
-    name: str = Field(index=True)
-    title: str | None = Field(index=True)
-    queryString: str | None = Field(index=True)
-    itemsPerPage: int | None = Field(index=True)
-class DocCollection(DocCollectionBase, table=True):
-    id: int = Field(primary_key=True)
+#class DocCollectionBase(SQLModel):
+#    name: str = Field(index=True)
+#    title: str | None = Field(index=True)
+#    queryString: str | None = Field(index=True)
+#    itemsPerPage: int | None = Field(index=True)
+#class DocCollection(DocCollectionBase, table=True):
+#    id: int = Field(primary_key=True)

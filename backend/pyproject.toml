@@ -19,6 +19,9 @@ license-files = [
 [project.urls]
 Homepage = "https://github.com/tkono17/Paperstack"
 
+[project.scripts]
+pstack-cli = "paperstack_backend.cli:app"
+
 [build-system]
 requires = [ "hatchling" ]
 build-backend = "hatchling.build"
