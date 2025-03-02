@@ -27,14 +27,14 @@ def create_document(document: DocumentCreate, session: SessionDep):
     #if doc_name == '':
     #    raise fastapi.HTTPException(status_code=400, detail='Document name cannot be empty')
     doc_ids = {item.name: item.id if item.id is not None else 0 for item in documentList.values()}
-    doc = None
 
-    session = Session(engine)
     doc_id = max(documentList.keys()) + 1 if documentList else 0
     data = Document.model_validate(document)
+
     session.add(data)
     session.commit()
     session.refresh(data)
+
     return data
 
 @app.get('/documents/', response_model=List[DocumentPublic])
