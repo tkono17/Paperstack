@@ -10,6 +10,9 @@ from typing import Optional
 from pydantic import BaseModel
 from sqlmodel import SQLModel, Field
 
+class Config(BaseModel):
+    storageDir : str = '.'
+    
 #-----------------------------------------------------
 # DocType
 #-----------------------------------------------------
@@ -32,7 +35,8 @@ class DocumentBase(SQLModel):
     author: str | None = Field(default=None, index=True)
     title: str | None = Field(default=None, index=True)
     documentType: str | None = Field(default=None, index=True)
-    tags: list[str] = Field(default=[], index=True)
+    filePath: str | None = Field(default=None, index=True)
+    tags: List[str] = Field(default=[], index=True)
     arxivId: str | None = Field(default=None, index=True)
     doi: str | None = Field(default=None, index=True)
     reference: str | None = Field(default=None, index=True)
@@ -43,14 +47,17 @@ class Document(DocumentBase, table=True):
 class DocumentPublic(DocumentBase):
     id: int
 
-DocumentCreate = DocumentBase
+DocumentCreate(DocumentBase):
+    file: UploadedFile | None
+
 
 class DocumentUpdate(DocumentBase):
     name: str | None = None
     author: str | None = None
     title: str | None = None
     documentType: str | None = None
-    tags: list[str] | None = None
+    filePath: str | None = None
+    tags: List[str] | None = None
     arxivId: str | None = None
     doi: str | None = None
     reference: str | None = None
