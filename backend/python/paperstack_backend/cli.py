@@ -5,9 +5,9 @@ from typing import Annotated, List
 from . import db
 from . import main
 
-from models import DocType, DocTypePublic, DocTypeCreate, DocTypeUpdate
-from models import Document, DocumentPublic, DocumentCreate, DocumentUpdate
-from models import DocCollection, DocCollectionPublic, DocCollectionCreate, DocCollectionUpdate
+#from .models import DocType, DocTypePublic, DocTypeCreate, DocTypeUpdate
+from .models import Document, DocumentPublic, DocumentCreate, DocumentUpdate
+#from .models import DocCollection, DocCollectionPublic, DocCollectionCreate, DocCollectionUpdate
 
 app = typer.Typer()
 

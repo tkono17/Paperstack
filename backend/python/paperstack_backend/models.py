@@ -6,23 +6,23 @@
 # DocumentCollection (Base, Public, Create, Update)
 #-----------------------------------------------------------------------
 from enum import Enum
-from typing import Optional
+from typing import List, Optional
 from pydantic import BaseModel
 from sqlmodel import SQLModel, Field
 
 #-----------------------------------------------------
 # DocType
 #-----------------------------------------------------
-class DocTypeBase(SQLModel):
-    name: str
+#class DocTypeBase(SQLModel):
+#    name: str
 
-class DocType(DocTypeBase, table=True):
-    id: int = Field(index=True)
+#class DocType(DocTypeBase, table=True):
+#    id: int = Field(index=True)
 
-DocTypeCreate = DocTypeBase
+#DocTypeCreate = DocTypeBase
 
-class DocTypeUpdate(DocTypeBase):
-    name: str | None = None
+#class DocTypeUpdate(DocTypeBase):
+#    name: str | None = None
 
 #-----------------------------------------------------
 # Document
@@ -32,7 +32,7 @@ class DocumentBase(SQLModel):
     author: str | None = Field(default=None, index=True)
     title: str | None = Field(default=None, index=True)
     documentType: str | None = Field(default=None, index=True)
-    tags: list[str] = Field(default=[], index=True)
+    #tags: List[str] = Field(default=[], index=True)
     arxivId: str | None = Field(default=None, index=True)
     doi: str | None = Field(default=None, index=True)
     reference: str | None = Field(default=None, index=True)
@@ -50,7 +50,7 @@ class DocumentUpdate(DocumentBase):
     author: str | None = None
     title: str | None = None
     documentType: str | None = None
-    tags: list[str] | None = None
+    #tags: List[str] | None = None
     arxivId: str | None = None
     doi: str | None = None
     reference: str | None = None
@@ -58,10 +58,10 @@ class DocumentUpdate(DocumentBase):
 #-----------------------------------------------------
 # DocCollection
 #-----------------------------------------------------
-class DocCollectionBase(SQLModel):
-    name: str = Field(index=True)
-    title: str | None = Field(index=True)
-    queryString: str | None = Field(index=True)
-    itemsPerPage: int | None = Field(index=True)
-class DocCollection(DocCollectionBase, table=True):
-    id: int = Field(primary_key=True)
+#class DocCollectionBase(SQLModel):
+#    name: str = Field(index=True)
+#    title: str | None = Field(index=True)
+#    queryString: str | None = Field(index=True)
+#    itemsPerPage: int | None = Field(index=True)
+#class DocCollection(DocCollectionBase, table=True):
+#    id: int = Field(primary_key=True)
