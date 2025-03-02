@@ -50,9 +50,9 @@ def createDocument(name: str,
                           file=None
     )
     dbi = db.DbInterface.get('sqlite:///pstack.db')
-    session = dbi.getSession()
-    print(f'  session in cli {session} {session.__class__}')
-    doc = main.create_document(data, session)
+    with dbi.getSession() as session:
+        print(f'  session in cli {session} {session.__class__}')
+        doc = main.create_document(data, session)
 
     #documentList[doc_id] = doc
     return doc

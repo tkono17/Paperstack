@@ -24,11 +24,8 @@ class DbInterface:
         self.engine = create_engine(url, connect_args=connect_args)
 
     def getSession(self):
-        print('In get session')
-        with Session(self.engine) as session:
-            print(f'before yield: {session}')
-            yield session
-        print('getSession done')
+        return Session(self.engine)
+
 
 def connectDatabase(dburl):
     global engine
@@ -41,9 +38,8 @@ def create_db_and_tables():
     SQLModel.metadata.create_all(s_dbi.engine)
 
 def get_session():
-    pass
-    #dbi = db.DbInterface.get()
-    #return dbi.getSession()
+    dbi = db.DbInterface.get()
+    return dbi.getSession()
 
 def on_startup():
     create_db_and_tables()
