@@ -3,7 +3,7 @@ from models import DocType, DocTypePublic, DocTypeCreate, DocTypeUpdate
 from models import Document, DocumentPublic, DocumentCreate, DocumentUpdate
 from models import DocCollection, DocCollectionPublic, DocCollectionCreate, DocCollectionUpdate
 from typing import Annotated
-from sqlmodel import SQLModel, Session, create_engine
+from sqlmodel import SQLModel, Session, Depends, create_engine
 
 sqlite_file_name = "database.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
@@ -41,12 +41,10 @@ def create_document(document: DocumentCreate, session: SessionDep):
     doc_ids = {item.name: item.id if item.id is not None else 0 for item in documentList.values()}
     doc = None
     data = {}
-    if doc_name in doc_ids.keys():
-        doc_id = doc_ids[doc_name]
-        doc = documentList[doc_id]
-    else:
-        # Properties in the pass parameter
-        doc_id = max(documentList.keys()) + 1 if documentList else 0
+
+    doc_id = max(documentList.keys()) + 1 if documentList else 0
+    data = DocumentCreate(doc_id, 
+                          name=None)
     # Properties in the request body
     data['author'] = dataIn.author
     data['title'] = dataIn.title
