@@ -1,14 +1,20 @@
-from sqlmodel import Session, create_engine
+from sqlmodel import Session, create_engine, SQLModel
 from typing import Annotated
 
 
 sqlite_file_name = "database.db"
-sqlite_url = f"sqlite:///{sqlite_file_name}"
+dburl = f"sqlite:///{sqlite_file_name}"
 
-connect_args = {"check_same_thread": False}
-engine = create_engine(sqlite_url, connect_args=connect_args)
+engine = None
+
+def connectDatabase(dburl):
+    global engine
+    connect_args = {"check_same_thread": False}
+    engine = create_engine(dburl, connect_args=connect_args)
+    return engine
 
 def create_db_and_tables():
+    print(f'create SQL tables')
     SQLModel.metadata.create_all(engine)
 
 def get_session():

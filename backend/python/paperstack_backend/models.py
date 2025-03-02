@@ -6,6 +6,7 @@
 # DocumentCollection (Base, Public, Create, Update)
 #-----------------------------------------------------------------------
 from enum import Enum
+from fastapi import UploadFile
 from typing import List, Optional
 from pydantic import BaseModel
 from sqlmodel import SQLModel, Field
@@ -32,11 +33,11 @@ class Config(BaseModel):
 #-----------------------------------------------------
 class DocumentBase(SQLModel):
     name: str = Field(index=True)
-    author: str | None = Field(default=None, index=True)
+    authors: str | None = Field(default=None, index=True)
     title: str | None = Field(default=None, index=True)
     documentType: str | None = Field(default=None, index=True)
     filePath: str | None = Field(default=None, index=True)
-    tags: List[str] = Field(default=[], index=True)
+    tags: str = Field(default=None, index=True)
     arxivId: str | None = Field(default=None, index=True)
     doi: str | None = Field(default=None, index=True)
     reference: str | None = Field(default=None, index=True)
@@ -47,9 +48,8 @@ class Document(DocumentBase, table=True):
 class DocumentPublic(DocumentBase):
     id: int
 
-DocumentCreate(DocumentBase):
-    file: UploadedFile | None
-
+class DocumentCreate(DocumentBase):
+    file: UploadFile | None
 
 class DocumentUpdate(DocumentBase):
     name: str | None = None
@@ -57,7 +57,7 @@ class DocumentUpdate(DocumentBase):
     title: str | None = None
     documentType: str | None = None
     filePath: str | None = None
-    tags: List[str] | None = None
+    tags: str | None = None
     arxivId: str | None = None
     doi: str | None = None
     reference: str | None = None
