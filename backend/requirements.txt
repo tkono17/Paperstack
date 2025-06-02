@@ -1,4 +1,7 @@
 fastapi
 redis
+typer
 types-redis
 uvicorn
+pydantic
+sqlmodel
