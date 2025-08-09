@@ -1,45 +1,33 @@
 from sqlmodel import Session, create_engine, SQLModel
 from typing import Annotated
+from fastapi import Depends
+from .. import model
+from ..config import setting
 
+engine = None
 
-sqlite_file_name = "database.db"
-dburl = f"sqlite:///{sqlite_file_name}"
-
-class DbInterface:
-    s_dbi = None
-
-    @staticmethod
-    def get(url=None):
-        if DbInterface.s_dbi == None:
-            DbInterface.s_dbi = DbInterface(url)
-        return DbInterface.s_dbi
-
-    def __init__(self, url):
-        self.engine = None
-        self.session = None
-        self.connect(url)
-
-    def connect(self, url):
-        connect_args = {"check_same_thread": False}
-        self.engine = create_engine(url, connect_args=connect_args)
-
-    def getSession(self):
-        return Session(self.engine)
-
-
-def connectDatabase(dburl):
+def connectDb():
     global engine
+    dburl = setting.sqliteUrl
     connect_args = {"check_same_thread": False}
     engine = create_engine(dburl, connect_args=connect_args)
     return engine
 
+def get_session():
+    global engine
+    if engine is None:
+        connectDb()
+    with Session(engine) as session:
+        yield session
+
+SessionDep = Annotated[Session, Depends(get_session)]
+
 def create_db_and_tables():
     print(f'create SQL tables')
-    SQLModel.metadata.create_all(s_dbi.engine)
-
-def get_session():
-    dbi = db.DbInterface.get()
-    return dbi.getSession()
+    global engine
+    if engine is None:
+        connectDb()
+    SQLModel.metadata.create_all(engine)
 
 def on_startup():
     create_db_and_tables()

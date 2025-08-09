@@ -11,10 +11,6 @@ app = fastapi.FastAPI()
 
 SessionDep = Annotated[Session, fastapi.Depends(db.get_session)]
 
-@app.on_event("startup")
-def on_startup():
-    db.create_db_and_tables()
-
 documentList: dict[int, DocumentPublic] = {}
 
 @app.get('/')
