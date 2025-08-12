@@ -30,6 +30,11 @@ def createDocument(name: str,
                    citation: Optional[str]      = None,
                    url: Optional[str]           = None,
                    config_file: Optional[Path] = None) -> DocumentPublic:
+    if config_file is None:
+        config_file = defaultConfigFile()
+    readConfig(config_file)
+    log.info(f'setting = {setting}')
+    
     base_file_path = None
     if file_path is not None and file_path.is_file():
         base_file_path = file_path.name
@@ -44,11 +49,6 @@ def createDocument(name: str,
                          doi=doi,
                          citation=citation,
                          url=url)
-    if config_file is None:
-        config_file = defaultConfigFile()
-    readConfig(config_file)
-    log.info(f'setting = {setting}')
-    
     db = DbAccess.get(setting.sqliteUrl)
     session = next(db.getSession())
     return document.createDocument(doc, session)

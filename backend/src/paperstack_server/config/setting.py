@@ -1,7 +1,10 @@
 import configparser
+import logging
 from dataclasses import dataclass
 from pathlib import Path
 import os
+
+log = logging.getLogger(__name__)
 
 @dataclass
 class Setting:
@@ -24,7 +27,8 @@ def readConfig(configFile: Path | None = None):
     setting.storageDir = os.environ['HOME']
     setting.sqliteFileName='paperstack.db'
     setting.sqliteUrl=f'sqlite:////tmp/{setting.sqliteFileName}'
-    
+
+    log.info(f'Read configuration from {configFile}')
     if configFile is not None and configFile.exists():
         config = configparser.ConfigParser()
         config.read(configFile)
@@ -35,8 +39,10 @@ def readConfig(configFile: Path | None = None):
             filesDir = sectionValue(section, 'filesDir')
             if filesDir is None:
                 setting.filesDir = Path(setting.storageDir)/'files'
+                log.info(f'filesDir = {setting.filesDir}')
             else:
                 setting.filesDir = filesDir
+                log.info(f'filesDir2 = {setting.filesDir}')
             if not os.path.exists(setting.storageDir):
                 os.mkdir(setting.storageDir)
             if not os.path.exists(setting.filesDir):
@@ -51,9 +57,9 @@ def readConfig(configFile: Path | None = None):
     return setting
 
 def defaultConfigFile():
-    fp1 = pathlib.Path(os.environ['HOME'])/'.paperstack.cfg'
+    fp1 = Path(os.environ['HOME'])/'.paperstack.cfg'
     fp2 = Path(__file__).parent / 'paperstack.cfg'
     if fp1.exists():
         return fp1
     else:
-        fp2
+        return fp2
