@@ -27,9 +27,9 @@ def getDocument(doc_id: int, session: SessionDep):
 def updateDocument(data: DocumentUpdate, session: SessionDep):
     pass
 
-@app.post('/file/create')
-def createFile(data: UploadedFile, session: SessionDep):
-    pass
+#@app.post('/file/create')
+#def createFile(data: UploadedFile, session: SessionDep):
+#    pass
 
 @app.get('/file/{file_id}')
 def getFile(file_id: int, session: SessionDep):
