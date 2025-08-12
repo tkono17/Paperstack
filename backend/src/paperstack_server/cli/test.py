@@ -13,11 +13,11 @@ app = typer.Typer()
 @app.command()
 def testCrud(config_file: Path | None = None):
     if config_file is None:
-        config_file = Path(f'{config}/pstack.db')
+        config_file = config / 'paperstack.cfg'
     setting = config.readConfig(config_file)
     log.info(f'Setting: {config.setting}')
 
-    session = get_session().__next__()
+    session = next(get_session())
     log.info(f'session before call: {session}')
     doc = model.DocumentCreate(name='First document')
     

@@ -31,7 +31,8 @@ class DocumentPublic(DocumentBase):
     id: int
 
 class DocumentCreate(DocumentBase):
-    file: UploadFile | None = None
+    #file: UploadFile | None = None
+    pass
 
 class DocumentUpdate(DocumentBase):
     name: str | None = None
