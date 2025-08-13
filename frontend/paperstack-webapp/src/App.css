@@ -1,5 +1,9 @@
 .App {
-  text-align: center;
+    text-align: center;
+    column-count: 3;
+}
+.App ul {
+    text-align: left;
 }
 
 .App-logo {

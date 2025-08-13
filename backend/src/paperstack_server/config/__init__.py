@@ -1,1 +1,1 @@
-from .setting import setting, readConfig, defaultConfigFile
+from .setting import appSetting, readConfig, defaultConfigFile

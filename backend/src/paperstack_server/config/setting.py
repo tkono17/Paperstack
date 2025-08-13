@@ -13,7 +13,7 @@ class Setting:
     sqliteFileName: str | None = None
     sqliteUrl: str | None = None
 
-setting = Setting()
+appSetting = Setting()
 
 def sectionValue(section, key):
     x = None
