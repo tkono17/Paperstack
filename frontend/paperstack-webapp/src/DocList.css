@@ -1,3 +1,34 @@
-.DocList {
+.DocListPanel {
     column-width: 50%;
+    background-color: Darkgrey;
+    flex: 1 1 auto;
+}
+
+.DocListPanel h2 {
+    color: red;
+}
+
+.DocList {
+    column-width: 100%;
+    overflow: scroll;
+    scrollbar-color: blue;
+    scrollbar-width: thin;
+}
+
+.DocItem {
+    column-width: 100%;
+    background-color: Papayawhip;
+    margin: 2px 2px 2px 2px;
+}
+
+.DocItem.row1 {
+    column-width: 100%
+}
+
+.DocItem.row2 {
+    column-width: 100%
+}
+
+.DocItem.row3 {
+    column-width: 100%
 }

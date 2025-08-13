@@ -38,7 +38,7 @@ function DocProperties(props) {
   const fields = kvlist.map(p => propField(p[0], p[1]));
     return (
       <div className="DocProperties">
-      <h3>Document properties</h3>
+      <h2>Document properties</h2>
       <ul>
       {fields}
       </ul>

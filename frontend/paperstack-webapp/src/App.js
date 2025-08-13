@@ -18,11 +18,13 @@ function App() {
     {
       name: "Document 1",
       authors: [ "A. Back", "C. Dixon" ],
-      title:"Title 1"
+      title:"Title 1",
+      docType: "Article"
     },{
       name:"Document 2",
       authors:[ "A. Back", "C. Dixon" ],
-      title:"Title 2"
+      title:"Title 2",
+      docType: "Manual"
     }
   ];
 

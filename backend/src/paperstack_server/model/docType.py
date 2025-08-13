@@ -14,7 +14,7 @@ from sqlmodel import SQLModel, Field
 class DocTypeBase(SQLModel):
     name: str
 
-class DocTypeDb(DocTypeBase, table=True):
+class DocType(DocTypeBase, table=True):
     id: int = Field(default=None, primary_key=True)
 
 DocTypeCreate = DocTypeBase

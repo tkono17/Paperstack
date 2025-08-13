@@ -1,6 +1,9 @@
 .App {
     text-align: center;
     column-count: 3;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
 }
 .App ul {
     text-align: left;
