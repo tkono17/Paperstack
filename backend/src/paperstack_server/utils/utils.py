@@ -1,17 +1,18 @@
-from ..db import DbAccess
-from ..config import readConfig, Settings
+from .dbAccess import DbAccess
+from .settings import readConfig, Settings
 from .stores import QueryStore, DocTypeStore
 
-class App:
+
+class Utils:
     def __init__(self):
         self.settings = None
         self.db = None
         self.queryStore = None
         self.docTypeStore = None
         #
-        self.documents = []
-        self.querySelected = None
-        self.documentSelected = None
+        #self.documents = []
+        #self.querySelected = None
+        #self.documentSelected = None
         
     def init(self):
         settings = Settings()
@@ -21,8 +22,8 @@ class App:
         self.docTypeStore = DocTypeStore()
         
 
-sApp = App()
+sUtils = Utils()
 
-def getApp():
-    global sApp
-    return sApp
+def getUtils():
+    global sUtils
+    return sUtils

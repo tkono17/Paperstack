@@ -1,12 +1,22 @@
-import fastapi
 import logging
+from sqlmodel import Session
+from typing import Annotated
+from fastapi import FastAPI, Depends
+
+from ..utils import getUtils
 from ..model import Document, DocumentPublic, DocumentCreate, DocumentUpdate
-from ..db import SessionDep
-from .. import config
 
 log = logging.getLogger(__name__)
 
-app = fastapi.FastAPI()
+app = FastAPI()
+
+def get_session():
+    utils = getUtils()
+    if utils is not None and utils.db is not None:
+        return utils.db.getSession()
+    return None
+
+SessionDep = Annotated[Session, Depends(get_session)]
 
 @app.post('/document/create')
 def createDocument(data: DocumentCreate,

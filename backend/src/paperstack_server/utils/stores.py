@@ -1,5 +1,4 @@
 import logging
-from ..config import appSetting
 
 log = logging.getLogger(__name__)
 

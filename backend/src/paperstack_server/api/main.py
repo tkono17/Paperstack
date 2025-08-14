@@ -2,7 +2,7 @@ import fastapi
 from sqlmodel import Session, select
 from typing import Annotated, List
 
-from . import db
+from ..app import getApp
 #from .models import DocType, DocTypePublic, DocTypeCreate, DocTypeUpdate
 from .models import Document, DocumentPublic, DocumentCreate, DocumentUpdate
 #from .models import DocCollection, DocCollectionPublic, DocCollectionCreate, DocCollectionUpdate
@@ -19,7 +19,8 @@ def root():
     
 @app.post('/documents/', response_model=DocumentPublic)
 def create_document(document: DocumentCreate, session: SessionDep):
-    engine = db.connectDatabase('sqlite:///../../../pstack.db')
+    psApp = getApp()
+    engine = psApp.db.connectDatabase('sqlite:///../../../pstack.db')
     #if doc_name == '':
     #    raise fastapi.HTTPException(status_code=400, detail='Document name cannot be empty')
     doc_ids = {item.name: item.id if item.id is not None else 0 for item in documentList.values()}

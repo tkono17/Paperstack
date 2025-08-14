@@ -55,15 +55,15 @@ class SimpleQCondition(QueryCondition):
 @dataclass
 class CompositeQCondition(QueryCondition):
     logic: QueryLogic
-    conditions: list[SimpleQCondition | CompositeQCondition]
+    conditions: list[QueryCondition]
 
     def passed(self, data):
         y = False
-        results = [ cond.passed(data) for self.conditions ]
+        results = [ cond.passed(data) for cond in self.conditions ]
         n = len(conditions)
         match self.logic:
             case QL.NOT:
-                if n==1: y = !results[0]
+                if n==1: y = not results[0]
             case QL.AND:
                 if results.count(True)==n: y = True
             case QL.NOT:

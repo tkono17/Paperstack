@@ -1,10 +1,5 @@
-from sqlmodel import Session, create_engine, SQLModel
-from typing import Annotated
-from fastapi import Depends
+from sqlmodel import Session, create_engine
 import logging
-
-from .. import model
-from ..config import setting
 
 log = logging.getLogger(__name__)
 
@@ -12,14 +7,15 @@ class DbAccess:
     sInstance = None
 
     @classmethod
-    def get(cls, url=setting.sqliteUrl):
+    def get(cls, url=None):
         x = None
-        log.info(f'In DbAccess.get: cls={cls}, instance={cls.sInstance}')
+        if url is None:
+            sApp = getApp()
+            url = sApp.settings.sqliteUrl
         if cls.sInstance is None:
             log.info(f'  Create DB instance {url}')
             cls.sInstance = cls(url)
         x = cls.sInstance
-        log.info(f'DB instance: {x}')
         return x
 
     def __init__(self, url):
@@ -43,14 +39,4 @@ class DbAccess:
         if self.engine is None:
             self.connectDb()
         SQLModel.metadata.create_all(self.engine)
-
-def get_session():
-    db = DbAccess.get()
-    return db.getSession()
-
-SessionDep = Annotated[Session, Depends(get_session)]
-
-def on_startup():
-    db = DbAccess.get()
-    db.createTables()
 

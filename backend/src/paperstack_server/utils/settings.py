@@ -1,19 +1,17 @@
+import os
 import configparser
 import logging
 from dataclasses import dataclass
 from pathlib import Path
-import os
 
 log = logging.getLogger(__name__)
 
 @dataclass
-class Setting:
+class Settings:
     storageDir: str | None = None
     filesDir: str | None = None
     sqliteFileName: str | None = None
     sqliteUrl: str | None = None
-
-appSetting = Setting()
 
 def sectionValue(section, key):
     x = None
@@ -22,11 +20,10 @@ def sectionValue(section, key):
     return x
 
     
-def readConfig(configFile: Path | None = None):
-    global setting
-    setting.storageDir = os.environ['HOME']
-    setting.sqliteFileName='paperstack.db'
-    setting.sqliteUrl=f'sqlite:////tmp/{setting.sqliteFileName}'
+def readConfig(settings: Settings, configFile: Path | None = None):
+    settings.storageDir = os.environ['HOME']
+    settings.sqliteFileName='paperstack.db'
+    settings.sqliteUrl=f'sqlite:////tmp/{settings.sqliteFileName}'
 
     log.info(f'Read configuration from {configFile}')
     if configFile is not None and configFile.exists():
@@ -35,23 +32,23 @@ def readConfig(configFile: Path | None = None):
 
         if 'Application' in config:
             section = config['Application']
-            setting.storageDir = sectionValue(section, 'storageDir')
+            settings.storageDir = sectionValue(section, 'storageDir')
             filesDir = sectionValue(section, 'filesDir')
             if filesDir is None:
-                setting.filesDir = Path(setting.storageDir)/'files'
-                log.info(f'filesDir = {setting.filesDir}')
+                settings.filesDir = Path(settings.storageDir)/'files'
+                log.info(f'filesDir = {settings.filesDir}')
             else:
-                setting.filesDir = filesDir
-                log.info(f'filesDir2 = {setting.filesDir}')
-            if not os.path.exists(setting.storageDir):
-                os.mkdir(setting.storageDir)
-            if not os.path.exists(setting.filesDir):
-                os.mkdir(setting.filesDir)
-            setting.storageType = sectionValue(section, 'storageType')
-        if setting.storageType == 'sqlite' and 'Sqlite' in config:
+                settings.filesDir = filesDir
+                log.info(f'filesDir2 = {settings.filesDir}')
+            if not os.path.exists(settings.storageDir):
+                os.mkdir(settings.storageDir)
+            if not os.path.exists(settings.filesDir):
+                os.mkdir(settings.filesDir)
+            settings.storageType = sectionValue(section, 'storageType')
+        if settings.storageType == 'sqlite' and 'Sqlite' in config:
             section = config['Sqlite']
-            setting.sqliteFileName = sectionValue(section, 'fileName')
-            setting.sqliteUrl = f'sqlite:///{setting.storageDir}/{setting.sqliteFileName}'
+            settings.sqliteFileName = sectionValue(section, 'fileName')
+            settings.sqliteUrl = f'sqlite:///{settings.storageDir}/{settings.sqliteFileName}'
     else:
         return setting
     return setting
