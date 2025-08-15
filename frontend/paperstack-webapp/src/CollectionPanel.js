@@ -1,14 +1,26 @@
 import './CollectionPanel.css';
 
 function CollectionPanel(props) {
-  const items = props.collections.map(c => <li>{c.name}</li>);
+  const collections = [
+    {
+      name: "Collection A",
+      condition: "name != \"\""
+    },{
+      name: "Collection B",
+      condition: "name != \"\""
+    }
+  ];
+
+  const items = collections.map(c => <option value={c.name} key={c.name}>{c.name}</option>);
+
   return (
     <div className="CollectionPanel">
       <h2>Panel</h2>
-      <ul>{items}</ul>
+      <select onChange={(e) => props.collectionSelected(e.target.value)}>
+        {items}
+      </select>
     </div>
   );
 }
 
 export default CollectionPanel;
-

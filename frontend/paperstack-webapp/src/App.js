@@ -1,38 +1,28 @@
 //import logo from './logo.svg';
+import {useState} from 'react';
 import './App.css';
 import CollectionPanel from './CollectionPanel.js';
 import DocList from './DocList.js';
 import DocProperties from './DocProperties.js';
 
 function App() {
-  const collections = [
-    {
-      name: "Collection A",
-      condition: "name != \"\""
-    },{
-      name: "Collection B",
-      condition: "name != \"\""
-    }
-  ];
-  const documents = [
-    {
-      name: "Document 1",
-      authors: [ "A. Back", "C. Dixon" ],
-      title:"Title 1",
-      docType: "Article"
-    },{
-      name:"Document 2",
-      authors:[ "A. Back", "C. Dixon" ],
-      title:"Title 2",
-      docType: "Manual"
-    }
-  ];
+  const [collection, setCollection] = useState('');
+  const [currentDoc, setCurrentDoc] = useState(null);
+
+  const collectionSelected = (c) => {
+    collection = setCollection(c);
+  };
+
+  const documentSelected = function(x) {
+    console.log('Document selected: ' + x)
+    setCurrentDoc(x);
+  }
 
   return (
     <div className="App">
-    <CollectionPanel collections={collections} />
-    <DocList documents={documents} />
-    <DocProperties document={document[0]} />
+    <CollectionPanel collectionSelected={(x) => setCollection(x)}/>
+    <DocList queryName={collection} documentSelected={documentSelected} />
+    <DocProperties document={currentDoc} />
     </div>
   );
   /* return (

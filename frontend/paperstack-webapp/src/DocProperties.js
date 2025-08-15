@@ -2,19 +2,25 @@ import './DocProperties.css';
 
 function valueField(name, value) {
   return (
-    <div className="PropField">
-    <label className="PropName">{name}</label>
-    <input className="PropValue" type="text" id="{name}">{value}</input>
+    <div className="PropField" key={name}>
+    <label className="PropName" for={name}>{name}</label>
+    <input className="PropValue" type="text" name={name} value={value} />
     </div>
   );
 }
 
+function listUpdated(text) {
+  console.log('List updated:' + text)
+}
+
 function listField(name, listValue) {
-  const items = listValue.map(x => x + '\n');
+  const n = listValue.length;
+  const items = listValue.toString().replace(',', '\n');
+  console.log('List values: ' + items);
   return (
-    <div className="PropField">
+    <div className="PropField" key={name}>
     <label className="PropName">{name}</label>
-    <textarea className="PropValue">{items}</textarea>
+    <textarea className="PropValue" rows={n} value={items} onChange={listUpdated}></textarea>
     </div>
   );
 }
@@ -22,9 +28,9 @@ function listField(name, listValue) {
 function propField(name, value) {
   var field = ''
   if (Array.isArray(value)) {
-    field = valueField(name, value);
-  } else if (typeof(value) in ["number", "string"]) {
     field = listField(name, value);
+  } else if (typeof(value) in ["number", "string"]) {
+    field = valueField(name, value);
   } else {
     field = valueField(name, value);
   }
@@ -32,18 +38,26 @@ function propField(name, value) {
 }
 
 function DocProperties(props) {
-  const kvlist = [ ['name', props.name],
-                   ['authors', props.authors],
-                   ['title', props.title] ];
-  const fields = kvlist.map(p => propField(p[0], p[1]));
-    return (
-      <div className="DocProperties">
+  console.log('Document updated...' + props.document);
+  var kvlist = [];
+  if (props.document === null) {
+    kvlist = [];
+  } else {
+    kvlist = [ ['name', props.document.name],
+    ['authors', props.document.authors],
+    ['title', props.document.title]
+  ];
+  }
+  var fields = kvlist.map(p => propField(p[0]+': ', p[1]));
+  console.log('N fields: ' + fields.length + ' ' + fields);
+  return (
+    <div className="DocPropertiesPanel">
       <h2>Document properties</h2>
-      <ul>
+      <div className="DocProperties">
       {fields}
-      </ul>
       </div>
-    );
+    </div>
+  );
 }
 
 export default DocProperties;
