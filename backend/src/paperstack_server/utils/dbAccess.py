@@ -1,4 +1,4 @@
-from sqlmodel import Session, create_engine
+from sqlmodel import Session, create_engine, SQLModel
 import logging
 
 log = logging.getLogger(__name__)

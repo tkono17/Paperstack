@@ -1,5 +1,5 @@
 from .dbAccess import DbAccess
-from .settings import readConfig, Settings
+from .settings import Settings
 from .stores import QueryStore, DocTypeStore
 
 
@@ -15,11 +15,28 @@ class Utils:
         #self.documentSelected = None
         
     def init(self):
-        settings = Settings()
-        readConfig(settings)
-        self.db = DbAccess()
-        self.queryStore = QueryStore()
-        self.docTypeStore = DocTypeStore()
+        self.settings = Settings()
+        self.settings.readConfig()
+        self.db = DbAccess(self.settings.sqliteUrl)
+        self.queryStore = Store()
+        self.docTypeStore = Store()
+        
+        docTypes = [ 'Article',
+                     'Eprint', 
+                     'Thesis', 
+                     'ThesisD',
+                     'ThesisM',
+                     'ThesisB',
+                     'Presentation',
+                     'Manual', 
+                     'Specification', 
+                     'Tutorial',
+                     'TechnicalNote', 
+                     'Datasheet',
+                     'Review', 
+                     'Book',]
+        for i, dt in enumerate(docTypes):
+            self.docTypeStore.add(dt, i+1)
         
 
 sUtils = Utils()
