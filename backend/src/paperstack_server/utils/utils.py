@@ -1,6 +1,6 @@
 from .dbAccess import DbAccess
 from .settings import Settings
-from .stores import QueryStore, DocTypeStore
+from .stores import Store
 
 
 class Utils:

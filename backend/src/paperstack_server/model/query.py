@@ -1,5 +1,5 @@
 from enum import Enum
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 class QueryOperator(Enum):
     EQ = '=='
@@ -19,20 +19,17 @@ class QueryLogic(Enum):
 
 QL = QueryLogic
 
-@dataclass
-class QueryCondition:
-    name: str
-    id: int
+class QueryCondition(BaseModel):
+    name: str | None = None
 
     def passed(self, data):
         x = False
         return x
 
-@dataclass
-class SimpleQCondition(QueryCondition):
-    op: QueryOperator
-    fieldName: str
-    value: int | float | str
+class SimpleQuery(QueryCondition):
+    op: QueryOperator | None = None
+    fieldName: str | None = None
+    value: int | float | str | None = None
 
     def passed(self, data):
         x = False
@@ -52,10 +49,9 @@ class SimpleQCondition(QueryCondition):
                 x = actualValue.lower().contains(self.value.lower())>=0
         return x
 
-@dataclass
-class CompositeQCondition(QueryCondition):
-    logic: QueryLogic
-    conditions: list[QueryCondition]
+class CompositeQuery(QueryCondition):
+    logic: QueryLogic | None = None
+    conditions: list[QueryCondition] | None = None
 
     def passed(self, data):
         y = False
@@ -73,26 +69,26 @@ class CompositeQCondition(QueryCondition):
 
 class QCgen:
     @classmethod
-    def condition(name, key, op, value):
-        return SimpleQCondition(name, key, op, value)
+    def condition(cls, name, op, key, value):
+        return SimpleQuery(name=name, op=op, fieldName=key, value=value)
         
     @classmethod
-    def composite(name, logic, conditions):
-        return CompositeQCondition(name, logic, conditions)
+    def composite(cls, name, logic, conditions):
+        return CompositeQuery(name=name, logic=logic, conditions=conditions)
 
     @classmethod
-    def Not(name, conditions):
-        return self.composite(name, QL.NOT, conditions)
+    def Not(cls, name, conditions):
+        return cls.composite(name, QL.NOT, conditions)
         
     @classmethod
-    def And(name, conditions):
-        return self.composite(name, QL.AND, conditions)
+    def And(cls, name, conditions):
+        return cls.composite(name, QL.AND, conditions)
         
     @classmethod
-    def Or(name, conditions):
-        return self.composite(name, QL.OR, conditions)
+    def Or(cls, name, conditions):
+        return cls.composite(name, QL.OR, conditions)
         
-        
+
 #
 # Condition('name', QOp.CONTAINS, 'part')
 # AND([1, 2, 3])

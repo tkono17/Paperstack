@@ -28,6 +28,7 @@ Homepage = "https://github.com/tkono17/Paperstack"
 [project.scripts]
 paperstack-cli = "paperstack_server.cli.paperstack_cli:main"
 paperstack-test = "paperstack_server.cli.test:mainTestCrud"
+paperstack-server = "paperstack_server.cli.server:main"
 
 [build-system]
 requires = [ "hatchling" ]

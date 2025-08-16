@@ -11,11 +11,12 @@ from typing import List, Optional
 from pydantic import BaseModel
 from sqlmodel import SQLModel, Field
 
-class DocTypeBase(SQLModel):
-    name: str
+class DocTypeBase(BaseModel):
+    name: str | None = None #Field(default=None, index=True)
 
-class DocType(DocTypeBase, table=True):
-    id: int = Field(default=None, primary_key=True)
+DocType = DocTypeBase
+#class DocType(DocTypeBase, table=True):
+#    id: int = Field(default=None, primary_key=True)
 
 DocTypeCreate = DocTypeBase
 

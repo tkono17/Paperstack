@@ -16,16 +16,24 @@ class Store:
 
     def find(self, nameOrId):
         x = None
-        if self.exists(name):
+        id = 0
+        name = ''
+        if type(nameOrId) != 'int':
+            name = nameOrId
+            id = self.nameToId(nameOrId)
+        elif type(nameOrId) == 'int':
             id = nameOrId
-            if type(nameOrId) != 'int':
-                id = self.nameToId(nameOrId)
+            name = self.idToName[nameOrId]
+        if name != '' and self.exists(name):
             x = self.idToX[id]
         return x
 
-    def add(self, name, id, x):
+    def size(self):
+        return len(self.names)
+    
+    def add(self, name, id, x=None):
         if name not in self.names:
-            self.names.append(key)
+            self.names.append(name)
             self.nameToId[name] = id
             self.idToName[id] = name
             self.idToX[id] = x

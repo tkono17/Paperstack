@@ -26,12 +26,20 @@ def createDocument(data: DocumentCreate,
 
 @app.get('/document/{doc_id}')
 def getDocument(doc_id: int, session: SessionDep):
+    log.info(f'get document {doc_id}')
     pass
 
-@app.post('/document/update')
+@app.post('/document/update/')
 def updateDocument(data: DocumentUpdate, session: SessionDep):
+    log.info(f'Update document {data}')
     pass
 
+@app.post('/document/delete/{doc_id}')
+def deleteDocument(doc_id: int, session: SessionDep):
+    log.info(f'Delete document {doc_id}')
+    pass
+
+          
 #@app.post('/file/create')
 #def createFile(data: UploadedFile, session: SessionDep):
 #    pass
