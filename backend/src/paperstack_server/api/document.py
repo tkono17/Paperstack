@@ -26,7 +26,7 @@ def createDocument(data: DocumentCreate,
     return db_doc
 
 @app.get('/document/{query}')
-def getDocument(query: Optional[Query], session: SessionDep):
+def getDocument(query: Optional[CompositeQuery], session: SessionDep):
     log.info(f'get document query={query}')
     sql = select(Document)
     results = session.exec(sql)
