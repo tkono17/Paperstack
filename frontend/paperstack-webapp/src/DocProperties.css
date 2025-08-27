@@ -1,10 +1,22 @@
 .DocPropertiesPanel {
     column-width: 20%;
-    flex: 1 1 auto;
     color: green;
     background-color:lavender;
 }
+
 .DocProperties {
     column-width: 100%;
+    margin: 3px 3px 3px 3px;
+    padding: 2px 2px 2px 2px;
+    display: grid;
+    grid-template-columns: 100px 2fr;
+    text-align: left;
     background-color:beige;
+}
+
+textarea.PropValue {
+    padding: 0px 0px 0px 0px;
+    height: auto;
+    overflow: hidden;
+    scrollbar-width: none;
 }

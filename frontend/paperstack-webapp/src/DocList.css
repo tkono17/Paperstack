@@ -1,7 +1,6 @@
 .DocListPanel {
     column-width: 60%;
     background-color: Darkgrey;
-    flex: 1 1 auto;
 }
 
 .DocListPanel h2 {

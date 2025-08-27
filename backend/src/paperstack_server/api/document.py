@@ -1,10 +1,11 @@
 import logging
-from sqlmodel import Session
-from typing import Annotated
+from sqlmodel import Session, select
+from typing import Annotated, Optional
 from fastapi import FastAPI, Depends
 
 from ..utils import getUtils, Settings
 from ..model import Document, DocumentPublic, DocumentCreate, DocumentUpdate
+from .query import CompositeQuery
 from .base import app, SessionDep
 
 log = logging.getLogger(__name__)
@@ -23,6 +24,13 @@ def createDocument(data: DocumentCreate,
     session.commit()
     session.refresh(db_doc)
     return db_doc
+
+@app.get('/document/{query}')
+def getDocument(query: Optional[Query], session: SessionDep):
+    log.info(f'get document query={query}')
+    sql = select(Document)
+    results = session.exec(sql)
+    return results
 
 @app.get('/document/{doc_id}')
 def getDocument(doc_id: int, session: SessionDep):

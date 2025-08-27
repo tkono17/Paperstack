@@ -1,33 +1,7 @@
 import React, {useState} from 'react';
 import './DocList.css';
 
-function DocList(props) {
-  var [ lastQuery, setLastQuery] = useState('');
-  var [ documents, setDocuments] = useState([]);
-
-  documents = [ {
-    name: "document one",
-    authors: ["T. Kono", "A. B"],
-    title: 'The 1st document',
-    docType: 'Article'
-  },{
-    name: "document two",
-    authors: ["R. Back"],
-    title: 'The 2nd document',
-    docType: 'eprint'
-  }];
-
-  /*if (props.queryName !== lastQuery) {
-    console.log('Query updated to ' + props.queryName);
-    setLastQuery(props.queryName);
-    if (props.queryName === 'Collection A') {
-      props.documentSelected(documents[0]);
-    } else if (props.queryName === 'Collection B') {
-      props.documentSelected(documents[1]);
-    } else {
-      props.documentSelected(null);
-    }
-  }*/
+function DocList({documents, documentSelected}) {
 
   const items = documents.map(x => 
     <div className="DocItem" key={x.name}>
