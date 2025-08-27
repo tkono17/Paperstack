@@ -28,11 +28,8 @@ def createDocument(data: DocumentCreate,
 @app.post('/document')
 def getDocument(query: Optional[CompositeQuery], session: SessionDep):
     log.info(f'get document query={query}')
-    #sql = select(Document)
-    #results = session.exec(sql)
-    results = {
-        "docs": "hello"
-    }
+    sql = select(Document)
+    results = session.exec(sql)
     return results
 
 @app.get('/document/{doc_id}')
