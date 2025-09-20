@@ -1,6 +1,5 @@
 from .dbAccess import DbAccess
-from .settings import Settings
-from .stores import Store
+from ..model import Settings, Store
 
 
 class Utils:
