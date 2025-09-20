@@ -56,7 +56,6 @@ class StorageSettings:
 class Settings:
     configFilePath: Optional[str] = None
     storage: Optional[StorageSettings] = None
-    
     pass
     
 

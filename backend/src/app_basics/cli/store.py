@@ -16,7 +16,7 @@ def store_create(store_name: str):
     pass
 
 @app.command('add')
-def store_add(store_name: str, entry: Any):
+def store_add(store_name: str, entry: str):
     pass
 
 @app.command('read')

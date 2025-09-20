@@ -14,7 +14,7 @@ def db_create_tables():
     pass
 
 @app.command('add')
-def db_add(url: str, entry: Any):
+def db_add(url: str, entry: str):
     pass
 
 @app.command('read')

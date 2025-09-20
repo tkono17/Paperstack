@@ -5,41 +5,48 @@ from ..model import ConfigSettings, Settings
 
 log = logging.getLogger(__name__)
 
+def validateConfigFile(configSettings):
+    if configSettings is None:
+        log.warning('ConfigSettings is None')
+        return False
+    if configSettings.configFileUsed is None:
+        log.warning(f'Configuration file is None')
+        return False
+    if not Path(configSettings.configFileUsed).exists():
+        log.warning(f'Configuration file {configSettings.configFileUsed} does not exist')
+        return False
+    return True
+
 def sectionValue(section, key):
     x = None
     if section is not None and key in section:
         x = section[key]
     return x
 
-def validateConfigFile(configSettings):
-    fn = None
-    if configSettings is None:
-        log.warning('ConfigSettings is None')
-        fn = configSettings.usedConfigFile()
-    if fn is None:
-        log.warning(f'Configuration file is None')
-        fn = configSettings.usedConfigFile()
-        return None
-    if not Path(fn).exists():
-        log.warning(f'Configuration file {fn} does not exist')
-        return None
-    return fn
+def addSection(settings, sectionName, section):
+    block = {}
+    block.update(section)
+    setattr(settings, sectionName, block)
+    log.info(f'{dir(settings)}')
 
 class ConfigReader:
     def __init__(self, configSettings):
         self.configSettings = configSettings
 
-
     def readSettings(self, settings):
-        fn = validateConfigFile(self.configSettings)
-        if fn is None:
+        log.info(self.configSettings)
+        if not validateConfigFile(self.configSettings):
             log.warning('No valid config file was found. Cannot read settings')
             return None
+        fn = self.configSettings.configFileUsed
         with open(fn, 'r'):
             parser = configparser.ConfigParser()
             parser.read(fn)
-            log.info(f'{parser.section.keys()}')
-            log.info(f'{dir(settings)}')
+            log.info(parser.items())
+            for key in parser.sections():
+                section = parser[key]
+                log.info(f'{key} -> {section}')
+                addSection(settings, key, section)
             pass
         pass
 

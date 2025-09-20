@@ -1,6 +1,7 @@
 import logging
 import typer
 from typing import Optional
+from dataclasses import asdict
 from ..model import ConfigSettings, Settings
 from ..utils import ConfigReader
 
@@ -21,9 +22,10 @@ def config_select(config_file_env: Optional[str] = None,
 @app.command('read')
 def config_read(config_path: str):
     csettings = ConfigSettings(systemConfigPath=config_path)
-    if csettings.configFileUsed isNone:
+    if csettings.configFileUsed is None:
         log.error(f'Configuration file does not exist {csettings.configFileUsed}')
         return
-    reader = ConfigReader(csettings.configFileUsed)
+    reader = ConfigReader(csettings)
     settings = Settings()
     reader.readSettings(settings)
+    log.info(f'Settings: {asdict(settings)}')
