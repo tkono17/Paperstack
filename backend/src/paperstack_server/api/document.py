@@ -3,8 +3,8 @@ from sqlmodel import Session, select
 from typing import Annotated, Optional
 from fastapi import FastAPI, Depends
 
-from ..utils import getUtils, Settings
-from ..model import Document, DocumentPublic, DocumentCreate, DocumentUpdate
+from ..utils import getUtils
+from ..model import Document, DocumentPublic, DocumentCreate, DocumentUpdate, Settings
 from .query import CompositeQuery
 from .base import app, SessionDep
 

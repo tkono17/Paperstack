@@ -9,7 +9,7 @@ app = typer.Typer()
 @app.command('createTables')
 def createTables(config_file: pathlib.Path | None = None):
     if config_file is None:
-        config_file = defaultConfigFile()
+        config_file = configFileUsed
     log.info(f'Read configuration from {config_file}')
     sApp = getApp()
     log.info(f'Setting = {sApp.settings}')

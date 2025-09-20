@@ -15,8 +15,7 @@ class Utils:
         
     def init(self):
         self.settings = Settings()
-        self.settings.readConfig()
-        self.db = DbAccess(self.settings.sqliteUrl)
+        self.db = None #DbAccess(self.settings.sqliteUrl)
         self.queryStore = Store()
         self.docTypeStore = Store()
         

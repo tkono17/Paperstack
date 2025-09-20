@@ -1,5 +1,5 @@
 from ..utils import Settings, DbAccess, readConfig
-from .stores import QueryStore, DocTypeStore
+from ...app_basics.app.stores import QueryStore, DocTypeStore
 
 class App:
     def __init__(self):

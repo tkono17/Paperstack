@@ -1,7 +1,7 @@
 import logging
 import typer
 import uvicorn
-from .app import getApp
+from ..app import getApp
 
 app = typer.Typer()
 
