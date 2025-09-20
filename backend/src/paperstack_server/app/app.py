@@ -1,9 +1,9 @@
-from ..db import DbAccess
-from ..config import readConfig, Settings
+from ..utils import Settings, DbAccess, readConfig
 from .stores import QueryStore, DocTypeStore
 
 class App:
     def __init__(self):
+        self.configSettings = None
         self.settings = None
         self.db = None
         self.queryStore = None
