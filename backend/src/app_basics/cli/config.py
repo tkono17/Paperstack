@@ -2,7 +2,7 @@ import logging
 import typer
 from typing import Optional
 import json
-import sys
+from dataclasses import asdict
 from ..model import ConfigSettings, Settings
 from ..utils import ConfigReader
 
@@ -28,6 +28,6 @@ def config_read(config_path: str):
         return
     reader = ConfigReader(csettings)
     settings = reader.readConfig()
-    log.info(f'Settings: \n{json.dumps(settings, indent=2)}')
+    log.info(f'Settings: \n{json.dumps(asdict(settings), indent=2)}')
     
 

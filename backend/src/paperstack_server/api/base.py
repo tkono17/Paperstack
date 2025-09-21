@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 
-from ..utils import getUtils
+from app_basics import getUtils
 
 def get_session():
     utils = getUtils()

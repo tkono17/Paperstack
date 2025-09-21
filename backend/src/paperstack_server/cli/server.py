@@ -7,20 +7,20 @@ app = typer.Typer()
 
 log = logging.getLogger(__name__)
 
-@app.command()
+@app.command('init')
 def init_db():
     log.info('Initialize database')
     sApp = getApp()
     #sApp.db.createTables()
     pass
 
-@app.command()
+@app.command('reset')
 def reset_db():
     log.info('Reset database')
     init_db()
     pass
 
-@app.command()
+@app.command('start')
 def start_server():
     log.info(f'Run the paperstack server')
     config = uvicorn.Config('paperstack_server.cli.server:serverMain', port=3100, log_level='info')
