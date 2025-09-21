@@ -1,5 +1,6 @@
 import logging
 import configparser
+from typing import Any
 from pathlib import Path
 from ..model import ConfigSettings, Settings
 
@@ -23,30 +24,35 @@ def sectionValue(section, key):
         x = section[key]
     return x
 
-def addSection(settings, sectionName, section):
+def addSection(settings, section):
     block = {}
-    block.update(section)
-    setattr(settings, sectionName, block)
-    log.info(f'{dir(settings)}')
+    for k in section.keys():
+        v = section[k]
+        log.info(f'item: {k} -> {v}')
+        block[k] = v
+    log.info(f'Add section {section.name}')
+    settings[section.name] = block
+    log.info(f'{settings}')
 
 class ConfigReader:
     def __init__(self, configSettings):
         self.configSettings = configSettings
 
-    def readSettings(self, settings):
+    def readConfig(self) -> dict[str, Any]:
         log.info(self.configSettings)
+        settings = {}
         if not validateConfigFile(self.configSettings):
             log.warning('No valid config file was found. Cannot read settings')
             return None
         fn = self.configSettings.configFileUsed
         with open(fn, 'r'):
             parser = configparser.ConfigParser()
+            parser.optionxform = str
             parser.read(fn)
             log.info(parser.items())
             for key in parser.sections():
                 section = parser[key]
-                log.info(f'{key} -> {section}')
-                addSection(settings, key, section)
-            pass
-        pass
+                log.info(f'  Add section {key} -> {section}')
+                addSection(settings, section)
+        return settings
 

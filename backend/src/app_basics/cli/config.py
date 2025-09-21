@@ -1,7 +1,8 @@
 import logging
 import typer
 from typing import Optional
-from dataclasses import asdict
+import json
+import sys
 from ..model import ConfigSettings, Settings
 from ..utils import ConfigReader
 
@@ -13,7 +14,7 @@ log = logging.getLogger(__name__)
 def config_select(config_file_env: Optional[str] = None,
                   home_config_file: Optional[str] = None,
                   system_config_path: Optional[str] = None):
-    csettings = ConfigSettings(configFileEnv=config_file_env,
+    csettings = ConfigSettings(configFileEnv=config_file_env, 
                                homeConfigFile=home_config_file,
                                systemConfigPath=system_config_path)
     log.info(f'ConfigSettings: {csettings}')
@@ -26,6 +27,7 @@ def config_read(config_path: str):
         log.error(f'Configuration file does not exist {csettings.configFileUsed}')
         return
     reader = ConfigReader(csettings)
-    settings = Settings()
-    reader.readSettings(settings)
-    log.info(f'Settings: {asdict(settings)}')
+    settings = reader.readConfig()
+    log.info(f'Settings: \n{json.dumps(settings, indent=2)}')
+    
+
