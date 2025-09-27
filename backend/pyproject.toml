@@ -17,10 +17,9 @@ license-files = [
 ]
 dependencies = [
   "typer",
-  "json",
   "fastapi",
   "sqlmodel",
-  "uvicorn[standard]",
+  "uvicorn[standard]"
 ]
 
 [project.urls]

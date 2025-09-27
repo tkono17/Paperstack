@@ -4,14 +4,12 @@ from typing import Annotated, Optional
 from fastapi import FastAPI, Depends
 
 from app_basics import getUtils
+from app_basics.model import CompositeQuery
 from ..model import Document, DocumentPublic, DocumentCreate, DocumentUpdate
 from .base import app, SessionDep
 
 log = logging.getLogger(__name__)
 
-
-u = getUtils()
-u.init()
 
 @app.post('/document/create')
 def createDocument(data: DocumentCreate,

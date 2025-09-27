@@ -25,6 +25,16 @@ def sectionValue(section, key):
         x = section[key]
     return x
 
+def addValues(settings, section):
+    for k in section.keys():
+        v = section[k]
+        log.info(f'item: {k} -> {v}')
+        try:
+            setattr(settings, k, v)
+        except AttributeError as e:
+            log.warning(f'Cannot find key {k} in setting under {section.name}: {e}')
+            continue
+
 def addSection(settings, section):
     try:
         block = getattr(settings, section.name)
@@ -58,6 +68,7 @@ def makeSettings(parser):
 class ConfigReader:
     def __init__(self, configSettings):
         self.configSettings = configSettings
+        self.defaultSection = 'application'
 
     def readConfig(self, settings=None):
         log.info(self.configSettings)
@@ -76,6 +87,9 @@ class ConfigReader:
             for key in parser.sections():
                 section = parser[key]
                 log.info(f'  Add section {key} -> {section}')
-                addSection(settings, section)
+                if section.name == self.defaultSection:
+                    addValues(settings, section)
+                else:
+                    addSection(settings, section)
         return settings
 

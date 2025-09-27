@@ -10,6 +10,7 @@ log = logging.getLogger(__name__)
 @dataclass
 class ConfigSettings:
     configFileEnv: Optional[str] = None
+    cwdConfigFile: Optional[str] = None
     homeConfigFile: Optional[str] = None
     systemConfigPath: Optional[str] = None
     configFileUsed: Optional[str] = None
@@ -18,11 +19,20 @@ class ConfigSettings:
         fn = None
         ok = False
         if self.configFileEnv is None and \
+            self.cwdConfigFile is None and \
             self.homeConfigFile is None and \
             self.systemConfigPath is None:
             log.warning(f'Nothing is specified in ConfigSettings')
             return None
         
+        if not ok and self.cwdConfigFile is not None:
+            if 'HOME' in os.environ:
+                fn = Path('.') /self.cwdConfigFile
+                fn = fn.absolute()
+            if os.path.exists(fn):
+                ok = True
+            else:
+                fn = None
         if self.configFileEnv is not None:
             if self.configFileEnv in os.environ:
                 fn = os.environ[self.configFileEnv]
@@ -45,15 +55,16 @@ class ConfigSettings:
                 fn = None
         self.configFileUsed = fn
     
+
 @dataclass
 class StorageSettings:
     storageDir: str
     filesDir: str
     sqliteFileName: str
-    sqliteUrl: str
+    sqliteUrl: Optional[str] = None
 
 @dataclass
-class Settings:
+class BasicSettings:
     configFilePath: Optional[str] = None
     storage: Optional[StorageSettings] = None
     pass

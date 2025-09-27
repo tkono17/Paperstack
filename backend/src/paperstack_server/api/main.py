@@ -1,12 +1,12 @@
 import fastapi
 from sqlmodel import Session, select
 from typing import Annotated, List
-from ..model import Settings
-from ..utils import getUtils
+from ..app import getApp
 from .base import app
+from . import document
 
-config_file = None
-getUtils().init()
+
+getApp().init()
 
 @app.get('/')
 def root():

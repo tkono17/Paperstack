@@ -1,7 +1,7 @@
 import logging
 
-from ..utils import getUtils
-from ..model import DocType, DocTypeCreate, DocTypePublic, DocTypeUpdate, Store
+from app_basics import Store
+from ..model import DocType, DocTypeCreate, DocTypePublic, DocTypeUpdate
 from .base import app, SessionDep
 
 log = logging.getLogger(__name__)
