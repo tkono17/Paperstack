@@ -26,7 +26,8 @@ dependencies = [
 Homepage = "https://github.com/tkono17/Paperstack"
 
 [project.scripts]
-appbasics-test = "app_basics.cli.test:main"
+appbasics-test = "appbasics.cli.test:main"
+appbasics-gen = "appbasics.cli.generate:main"
 paperstack-cli = "paperstack_server.cli.paperstack_cli:main"
 paperstack-test = "paperstack_server.cli.test:mainTestCrud"
 paperstack-server = "paperstack_server.cli.server:main"
@@ -36,4 +37,4 @@ requires = [ "hatchling" ]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = [ "src/paperstack_server", "src/app_basics" ]
+packages = [ "src/paperstack_server", "src/appbasics" ]
