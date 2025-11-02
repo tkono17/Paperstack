@@ -8,19 +8,34 @@ from ..model import ConfigSettings
 log = logging.getLogger(__name__)
 
 sConfigSettings = None
-def getConfigSettings():
-    if sConfigSettings is None:
-        sConfigSettings = ConfigSettings()
-    return sConfigSettings
+sConfigFileEnv_default = 'APPBASICS_CONFIG_FILE'
+sHomeConfigFile_default = 'appbasics.cfg'
 
-def createConfigSettings(configFileEnv: Optional[str] = None,
-    homeConfigFile: Optional[str] = None,
-    systemConfigPath: Optional[str] = None):
+def createConfigSettings(configFileEnv: Optional[str] = sConfigFileEnv_default,
+                         homeConfigFile: Optional[str] = sHomeConfigFile_default,
+                         systemConfigPath: Optional[str] = None):
+    global sConfigSettings
     sConfigSettings = ConfigSettings(configFileEnv,
                                      homeConfigFile,
                                      systemConfigPath)
-    return getConfigSettings()
+    return sConfigSettings
 
+def getConfigSettings():
+    global sConfigSettings
+    if sConfigSettings is None:
+        sConfigSettings = createConfigSettings()
+    return sConfigSettings
+
+def setConfigDefaults(configFileEnv: Optional[str] = None,
+                      homeConfigFile: Optional[str] = None):
+    global sConfigFileEnv_default
+    global sHomeConfigFile_default
+    if configFileEnv is not None:
+        sConfigFileEnv_default = configFileEnv
+    if homeConfigFile is not None:
+        sHomeConfigFile_default = homeConfigFile
+    pass
+    
 def validateConfigFile(configSettings):
     if configSettings is None:
         log.warning('ConfigSettings is None')

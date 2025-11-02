@@ -27,14 +27,7 @@ class ConfigSettings:
             log.warning(f'Nothing is specified in ConfigSettings')
             return None
         
-        if doCheck and self.cwdConfigFile is not None:
-            if 'HOME' in os.environ:
-                fn = Path('.') /self.cwdConfigFile
-                fn = fn.absolute()
-            if os.path.exists(fn):
-                doCheck = False
-            else:
-                fn = None
+        if doCheck and self.configFileEnv is not None:
             if self.configFileEnv is not None:
                 if self.configFileEnv in os.environ:
                     fn = os.environ[self.configFileEnv]

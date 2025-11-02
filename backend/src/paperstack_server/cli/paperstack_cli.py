@@ -1,12 +1,26 @@
 import logging
 import typer
 import pathlib
+from app_basics import getApp
 from .document import app as document_app
-from ..db import app as db_app
+#from app_basics import app as db_app
 from .. import config
 
 logger = logging.getLogger(__name__)
 app = typer.Typer()
+
+@app.command('init')
+def init_db():
+    log.info('Initialize database')
+    sApp = getApp()
+    #sApp.db.createTables()
+    pass
+
+@app.command('reset')
+def reset_db():
+    log.info('Reset database')
+    init_db()
+    pass
 
 def main():
     logging.basicConfig(level=logging.INFO,

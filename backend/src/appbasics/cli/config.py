@@ -3,8 +3,8 @@ import typer
 from typing import Optional
 import json
 from dataclasses import asdict
-from ..model import ConfigSettings, Settings
-from ..utils import ConfigReader
+from ..model import ConfigSettings
+from ..utils import ConfigReader, createConfigSettings, getConfigSettings
 
 app = typer.Typer()
 
@@ -19,12 +19,3 @@ def config_check(config_path: str):
     reader = ConfigReader(csettings)
     settings = reader.readConfig()
     log.info(f'Settings: \n{json.dumps(asdict(settings), indent=2)}')
-    
-@app.command('save')
-def config_save(config_file_env: Optional[str] = None,
-                system_config_path: Optional[str] = None):
-    csettings = ConfigSettings(configFileEnv=config_file_env, 
-                               systemConfigPath=system_config_path)
-    log.info(f'ConfigSettings: {csettings}')
-    log.info(f'  --> Configuration file used: {csettings.configFileUsed}')
-
