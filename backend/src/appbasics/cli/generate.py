@@ -3,7 +3,11 @@ import os
 import importlib
 import logging
 import typer
+import typing
+import datetime
 from pathlib import Path
+from dataclasses import _MISSING_TYPE
+import dataclasses
 
 log = logging.getLogger(__name__)
 
@@ -21,23 +25,89 @@ def loadModule(fpath):
         module = importlib.import_module(mn)
     return module
 
+def varType(field):
+    vType = str
+    intT = type(int)
+    floatT = type(float)
+    log.info(f'    type of the field.type: {type(field.type)}')
+    match field.type:
+        case typing._UnionGenericAlias: vType =  str(field.default)
+        case _: vType = type(field.type).__name__
+    return vType
+
+def dbType(field):
+    db_type = str
+    log.info(f'py type: {field.type}')
+    match field.type:
+        case 'str' | 'int' | 'float': db_type = field.type
+        case datetime.datetime | datetime.date: db_type = 'str'
+        case _: db_type = str
+    return db_type
+
+def defaultValue(field):
+    dvalue = None
+    log.info(f'    {field.name} type:{type(field.type)} value={field.default} valueType: {type(field.default)}')
+    match field.default:
+        case _: dvalue = field.default
+    return dvalue
+
+def isList(field):
+    result = False
+    if field.default_factory in (list, typing.List):
+        result = True
+    return result
+
+def writeField(field, fout, prefix=''):
+    fout.write(f'{prefix}{field[0]}: {field[1]}\n')
+
+def writeClass(clsName, fields, fout, baseName=None, prefix=''):
+    fout.write(f'{prefix}class {clsName}')
+    if baseName is not None:
+        fout.write(f'({baseName})')
+    fout.write(':\n')
+
+    for field in fields:
+        writeField(field, fout, prefix+'  ')
+    fout.write('\n')
+
 def generateModel(cls, fout):
     clsName = cls.__name__
     log.info(f'  Generate model for {clsName}')
     for x in dir(cls):
         log.info(f'  {x} -> {getattr(cls, x)}')
-    
-    fout.write(f'class {clsName}:\n')
-    prefix = '  '
-    
+
+    fields_base = []
+    fields_db = []
+    fields_public = []
+    fields_create = []
+    fields_update = []
+
+    is_option = True
     for name in cls.__dataclass_fields__:
         annotation = cls.__annotations__[name]
         field = cls.__dataclass_fields__[name]
-        tname = annotation
-        if annotation in (str, int, float):
-            tname = annotation.__name__
-        log.info(f'    annotation {name} -> {tname}, {field}')
-        fout.write(f'{prefix}{name}: {tname}\n')
+
+        var_type = varType(field)
+        db_type = dbType(field)
+        value = defaultValue(field)
+        is_list = isList(field)
+
+        value = None
+        fields_base.append( (name, var_type, db_type, value,) )
+        fields_public.append( (name, var_type, db_type, value) )
+        fields_create.append( (name, var_type, db_type, value) )
+        fields_update.append( (name, var_type, db_type, None) )
+        if not is_list:
+            fields_db.append( (name, var_type, db_type, value) )
+
+    fout.write('import typing\n')
+    fout.write('from sqlmodel import SQLModel\n')
+    fout.write('\n')
+    writeClass(f'{clsName}Base', fields_base, fout, baseName='SQLModel')
+    writeClass(f'{clsName}', fields_db, fout, baseName=clsName)
+    writeClass(f'{clsName}Public', fields_public, fout, baseName=clsName)
+    writeClass(f'{clsName}Create', fields_create, fout, baseName=clsName)
+    writeClass(f'{clsName}Update', fields_update, fout, baseName=clsName)
     pass
 
 def generateFastAPI(cls, fout):
