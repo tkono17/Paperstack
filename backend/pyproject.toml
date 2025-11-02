@@ -28,6 +28,7 @@ Homepage = "https://github.com/tkono17/Paperstack"
 [project.scripts]
 appbasics-test = "appbasics.cli.test:main"
 appbasics-gen = "appbasics.cli.generate:main"
+appbasics-toolset = "appbasics.cli.toolset:main"
 paperstack-cli = "paperstack_server.cli.paperstack_cli:main"
 paperstack-test = "paperstack_server.cli.test:mainTestCrud"
 paperstack-server = "paperstack_server.cli.server:main"

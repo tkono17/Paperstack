@@ -10,47 +10,51 @@ log = logging.getLogger(__name__)
 @dataclass
 class ConfigSettings:
     configFileEnv: Optional[str] = None
-    cwdConfigFile: Optional[str] = None
     homeConfigFile: Optional[str] = None
     systemConfigPath: Optional[str] = None
     configFileUsed: Optional[str] = None
 
     def __post_init__(self):
         fn = None
-        ok = False
+        doCheck = True
+        
+        def isOk(self):
+            return ok
+        
         if self.configFileEnv is None and \
-            self.cwdConfigFile is None and \
             self.homeConfigFile is None and \
             self.systemConfigPath is None:
             log.warning(f'Nothing is specified in ConfigSettings')
             return None
         
-        if not ok and self.cwdConfigFile is not None:
+        if doCheck and self.cwdConfigFile is not None:
             if 'HOME' in os.environ:
                 fn = Path('.') /self.cwdConfigFile
                 fn = fn.absolute()
             if os.path.exists(fn):
-                ok = True
+                doCheck = False
             else:
                 fn = None
-        if self.configFileEnv is not None:
-            if self.configFileEnv in os.environ:
-                fn = os.environ[self.configFileEnv]
-            if fn is not None and os.path.exists(fn):
-                ok = True
-            else:
-                fn = None
-        if not ok and self.homeConfigFile is not None:
+            if self.configFileEnv is not None:
+                if self.configFileEnv in os.environ:
+                    fn = os.environ[self.configFileEnv]
+                if fn is not None and os.path.exists(fn):
+                    doCheck = False
+                else:
+                    fn = None
+        
+        if doCheck and self.homeConfigFile is not None:
             if 'HOME' in os.environ:
                 fn = os.path.join(os.environ['HOME'], self.homeConfigFile)
             if os.path.exists(fn):
-                ok = True
+                doCheck = False
             else:
                 fn = None
-        if not ok and self.systemConfigPath:
+
+        if doCheck and self.systemConfigPath:
             fn = self.systemConfigPath
             if os.path.exists(fn):
-                ok = True
+                doCheck = False
             else:
                 fn = None
         self.configFileUsed = fn
@@ -58,10 +62,14 @@ class ConfigSettings:
 
 @dataclass
 class StorageSettings:
-    storageDir: str
-    filesDir: str
-    sqliteFileName: str
+    storageDir: Optional[str] = None
+    filesDir: Optional[str] = None
     sqliteUrl: Optional[str] = None
+
+    def __post_init__(self):
+        if os.path.exists(self.storageDir):
+            self.filesDir = os.path.join(self.storageDir, 'files')
+        pass
 
 @dataclass
 class BasicSettings:

@@ -1,2 +1,2 @@
-from .model import ConfigSettings, StorageSettings, Store
-from .utils import ConfigReader, Utils, getUtils
+from .model import StorageSettings, Store
+from .utils import ConfigReader, Utils, getUtils, getConfigSettings

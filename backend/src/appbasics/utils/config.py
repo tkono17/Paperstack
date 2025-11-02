@@ -7,6 +7,20 @@ from ..model import ConfigSettings
 
 log = logging.getLogger(__name__)
 
+sConfigSettings = None
+def getConfigSettings():
+    if sConfigSettings is None:
+        sConfigSettings = ConfigSettings()
+    return sConfigSettings
+
+def createConfigSettings(configFileEnv: Optional[str] = None,
+    homeConfigFile: Optional[str] = None,
+    systemConfigPath: Optional[str] = None):
+    sConfigSettings = ConfigSettings(configFileEnv,
+                                     homeConfigFile,
+                                     systemConfigPath)
+    return getConfigSettings()
+
 def validateConfigFile(configSettings):
     if configSettings is None:
         log.warning('ConfigSettings is None')
