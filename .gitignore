@@ -163,3 +163,7 @@ cython_debug/
 
 *~
 *.db
+model/_*.py
+cli/_*.py
+api/_*.py
+
