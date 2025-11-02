@@ -108,7 +108,14 @@ def generateModel(cls, fout):
     writeClass(f'{clsName}Public', fields_public, fout, baseName=clsName)
     writeClass(f'{clsName}Create', fields_create, fout, baseName=clsName)
     writeClass(f'{clsName}Update', fields_update, fout, baseName=clsName)
-    pass
+    return {
+        'name': clsName,
+        'fields_base': fields_base,
+        'fields_db': fields_db,
+        'fields_public': fields_public,
+        'fields_create': fields_create,
+        'fields_update': fields_update
+    }
 
 def generateFastAPI(cls, fout):
     pass
