@@ -129,7 +129,7 @@ def writeClassPublic(cls, fout, baseName=None, prefix=''):
     fout.write(':\n')
 
     prefix2 = prefix + '  '
-    fout.write(f'{prefix2}id: int | None = Field(default=None)\n')
+    fout.write(f'{prefix2}id: int | None = field(default=None)\n')
     fout.write('\n')
 
 def writeClassCreate(cls, fout, baseName=None, prefix=''):
@@ -163,6 +163,7 @@ def generateModel(cls, fout):
     log.info(f'  Generate model for {clsName}')
 
     fout.write('import typing\n')
+    fout.write('from dataclasses import field\n')
     fout.write('from sqlmodel import SQLModel, Field\n')
     fout.write('import basemodel\n')
     fout.write('\n')

@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional, List
 
 @dataclass
@@ -30,5 +30,5 @@ class SimpleQuery:
 class CompositeQuery:
     name: str
     logic: Optional[str] = None
-    subQueryNames: List[str] | None = None
+    subQueryNames: List[str] | None = field(default_factory=list)
 
