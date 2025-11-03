@@ -23,7 +23,8 @@ class SimpleQuery:
     name: str
     op: Optional[str] = None
     fieldName: Optional[str] = None
-    value: str | int | float | None = None
+    valueType: Optional[str] = None
+    value: Optional[str] = None
 
 @dataclass
 class CompositeQuery:

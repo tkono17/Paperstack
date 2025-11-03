@@ -26,22 +26,25 @@ def loadModule(fpath):
     return module
 
 def varType(field):
-    vType = str
-    intT = type(int)
-    floatT = type(float)
-    log.info(f'    type of the field.type: {type(field.type)}')
-    match field.type:
-        case typing._UnionGenericAlias: vType =  str(field.default)
-        case _: vType = type(field.type).__name__
-    return vType
+    tname = None
+    if field.type == int:
+        tname = 'int'
+    elif field.type == float:
+        tname = 'float'
+    elif field.type == str:
+        tname = 'str'
+    elif field.type == list:
+        tname = field.type
+    else:
+        tname = field.type
+    return tname
 
 def dbType(field):
-    db_type = str
+    tname = str
     log.info(f'py type: {field.type}')
-    match field.type:
-        case 'str' | 'int' | 'float': db_type = field.type
-        case datetime.datetime | datetime.date: db_type = 'str'
-        case _: db_type = str
+    if field.type == int:
+        tname = int
+
     return db_type
 
 def defaultValue(field):
@@ -51,71 +54,125 @@ def defaultValue(field):
         case _: dvalue = field.default
     return dvalue
 
+def isOptional(field):
+    if str(field.type).find('Optional')>=0:
+        return True
+    return False
+
+def isScalar(field):
+    result = True
+    if field.type == int or field.type == float or field.type == str:
+        pass
+    elif isOptional(field):
+        none_type = type(None)
+        for arg in field.type.__args__:
+            log.info(f'arg : {arg}')
+            if arg not in (int, float, str, none_type):
+                log.info(f'  not a scalar')
+                result = False
+                break
+    return result
+
 def isList(field):
     result = False
     if field.default_factory in (list, typing.List):
         result = True
     return result
 
-def writeField(field, fout, prefix=''):
-    fout.write(f'{prefix}{field[0]}: {field[1]}\n')
+def isObject(field):
+    result = False
+    if not (isScalar(field) or isList(field)):
+        result = True
+    return result
 
-def writeClass(clsName, fields, fout, baseName=None, prefix=''):
-    fout.write(f'{prefix}class {clsName}')
+def writeClassBase(cls, fout, baseName=None, prefix=''):
+    clsName = cls.__name__
+    fout.write(f'{prefix}class {clsName}Base')
     if baseName is not None:
         fout.write(f'({baseName})')
     fout.write(':\n')
 
-    for field in fields:
-        writeField(field, fout, prefix+'  ')
+    prefix2 = prefix + '  '
+    for fieldName, field in cls.__dataclass_fields__.items():
+        var_type = varType(field)
+        log.info(f'field {fieldName} {dir(field.type)}')
+        log.info(f'field {field.type.__name__}')
+        fieldString = f'Field(index=True'
+        if isOptional(field):
+            fieldString += f', default=None'
+        fieldString += ')'
+        fout.write(f'{prefix2}{field.name}: {var_type} = {fieldString}\n')
+    fout.write('\n')
+
+def writeClassDb(cls, fout, baseName=None, prefix=''):
+    clsName = cls.__name__
+    fout.write(f'{prefix}class {clsName}')
+    if baseName is not None:
+        fout.write(f'({baseName}, table=True)')
+    fout.write(':\n')
+
+    prefix2 = prefix + '  '
+    fout.write(f'{prefix2}id: int | None = Field(default=None, primary_key=True)\n')
+    for fieldName, field in cls.__dataclass_fields__.items():
+        if isList(field):
+            pass
+        elif isObject(field):
+            linkName = f'{fieldName}_id'
+            fout.write(f'{prefix2}{linkName}: int | None = Field(default=None, index=True)\n')
+    fout.write('\n')
+
+def writeClassPublic(cls, fout, baseName=None, prefix=''):
+    clsName = cls.__name__
+    fout.write(f'{prefix}class {clsName}Public')
+    if baseName is not None:
+        fout.write(f'({baseName})')
+    fout.write(':\n')
+
+    prefix2 = prefix + '  '
+    fout.write(f'{prefix2}id: int | None = Field(default=None)\n')
+    fout.write('\n')
+
+def writeClassCreate(cls, fout, baseName=None, prefix=''):
+    clsName = cls.__name__
+    fout.write(f'{prefix}class {clsName}Create')
+    if baseName is not None:
+        fout.write(f'({baseName})')
+    fout.write(':\n')
+    prefix2 = prefix + '  '
+    fout.write(f'{prefix2}pass\n')
+    fout.write('\n')
+
+
+def writeClassUpdate(cls, fout, baseName=None, prefix=''):
+    clsName = cls.__name__
+    fout.write(f'{prefix}class {clsName}Update')
+    if baseName is not None:
+        fout.write(f'({baseName})')
+    fout.write(':\n')
+
+    prefix2 = prefix + '  '
+    for fieldName, field in cls.__dataclass_fields__.items():
+        var_type = varType(field)
+        if not isOptional(field):
+            var_type = f'{var_type} | None'
+        fout.write(f'{prefix2}{field.name}: {var_type} = None\n')
     fout.write('\n')
 
 def generateModel(cls, fout):
     clsName = cls.__name__
     log.info(f'  Generate model for {clsName}')
-    for x in dir(cls):
-        log.info(f'  {x} -> {getattr(cls, x)}')
-
-    fields_base = []
-    fields_db = []
-    fields_public = []
-    fields_create = []
-    fields_update = []
-
-    is_option = True
-    for name in cls.__dataclass_fields__:
-        annotation = cls.__annotations__[name]
-        field = cls.__dataclass_fields__[name]
-
-        var_type = varType(field)
-        db_type = dbType(field)
-        value = defaultValue(field)
-        is_list = isList(field)
-
-        value = None
-        fields_base.append( (name, var_type, db_type, value,) )
-        fields_public.append( (name, var_type, db_type, value) )
-        fields_create.append( (name, var_type, db_type, value) )
-        fields_update.append( (name, var_type, db_type, None) )
-        if not is_list:
-            fields_db.append( (name, var_type, db_type, value) )
 
     fout.write('import typing\n')
-    fout.write('from sqlmodel import SQLModel\n')
+    fout.write('from sqlmodel import SQLModel, Field\n')
+    fout.write('import basemodel\n')
     fout.write('\n')
-    writeClass(f'{clsName}Base', fields_base, fout, baseName='SQLModel')
-    writeClass(f'{clsName}', fields_db, fout, baseName=clsName)
-    writeClass(f'{clsName}Public', fields_public, fout, baseName=clsName)
-    writeClass(f'{clsName}Create', fields_create, fout, baseName=clsName)
-    writeClass(f'{clsName}Update', fields_update, fout, baseName=clsName)
-    return {
-        'name': clsName,
-        'fields_base': fields_base,
-        'fields_db': fields_db,
-        'fields_public': fields_public,
-        'fields_create': fields_create,
-        'fields_update': fields_update
-    }
+    writeClassBase(cls, fout, baseName='SQLModel')
+    writeClassDb(cls, fout, baseName=f'{clsName}Base')
+    writeClassPublic(cls, fout, baseName=f'{clsName}Base')
+    writeClassCreate(cls, fout, baseName=f'{clsName}Base')
+    writeClassUpdate(cls, fout, baseName=f'{clsName}Base')
+
+    return None
 
 def generateFastAPI(cls, fout):
     pass
