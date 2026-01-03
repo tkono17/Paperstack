@@ -1,4 +1,4 @@
-from app_basics.model import QOp, QL, QueryCondition, SimpleQuery, CompositeQuery, QCgen, Store
+from appbasics.model import QOp, QL, QueryCondition, SimpleQuery, CompositeQuery, QCgen, Store
 from .base import app, SessionDep
 
 store = Store()

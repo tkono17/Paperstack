@@ -1,2 +1,2 @@
-from .model import StorageSettings, Store
+from .model import StorageSettings, ConfigSettings, Store
 from .utils import *

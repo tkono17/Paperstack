@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from typing import Optional
-from app_basics import getUtils, ConfigSettings, StorageSettings, ConfigReader
+from appbasics import getUtils, ConfigSettings, StorageSettings, ConfigReader
 
 def initStores(docTypeStore, queryStore):
     docTypes = [ 'Article',
@@ -45,9 +45,7 @@ class PaperstackSettings:
 class App:
     def __init__(self):
         self.configSettings = ConfigSettings(configFileEnv='PAPERSTACK_CONFIG',
-                                             cwdConfigFile='paperstack.cfg',
-                                             homeConfigFile='.paperstack.cfg',
-                                             systemConfigPath='/etc/paperstack.cfg')
+                                             homeConfigFile='.paperstack.cfg')
         self.utils = getUtils()
         self.docTypeStore = self.utils.addStore('DocType')
         self.queryStore = self.utils.addStore('Query')
@@ -56,12 +54,11 @@ class App:
         self.querySelected = None
         self.documentSelected = None
         
-    def init(self):
-        reader = ConfigReader(self.configSettings)
-        print(dir(PaperstackSettings))
-        settings = PaperstackSettings()
-        self.settings = reader.readConfig(settings)
-        print('storage: ', settings.storage)
+    def init(self, configPath=None):
+        reader = ConfigReader(configPath=configPath,
+                              configSettings=self.configSettings)
+        self.settings = reader.readConfig(PaperstackSettings())
+        print('storage: ', self.settings.storage)
         self.utils.init(self.settings)
         self.db = self.utils.db
         initStores(self.docTypeStore, self.queryStore)

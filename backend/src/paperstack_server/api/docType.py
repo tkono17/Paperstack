@@ -1,6 +1,6 @@
 import logging
 
-from app_basics import Store
+from appbasics import Store
 from ..model import DocType, DocTypeCreate, DocTypePublic, DocTypeUpdate
 from .base import app, SessionDep
 

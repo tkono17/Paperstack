@@ -1,11 +1,10 @@
 from typing import Annotated
-import fastapi, Query
+from fastapi import Query
 from sqlmodel import select
 import logging
 
 from ..model import Document, DocumentPublic, DocumentCreate, DocumentUpdate
-from ..db import SessionDep
-from .main import app
+from .base import app, SessionDep
 
 log = logging.getLogger(__name__)
 
@@ -21,7 +20,7 @@ def createDocument(data: DocumentCreate, session: SessionDep):
 
 @app.get('/document', response_model=list[DocumentPublic])
 def getDocuments(session: SessionDep,
-                 offset; int = 0,
+                 offset: int = 0,
                  limit: Annotated[int, Query(le=100)] = 100):
     documents = session.exec(select(Document).offset(offset).limit(limit)).all()
     return documents
