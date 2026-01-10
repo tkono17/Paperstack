@@ -1,6 +1,9 @@
-from dataclasses import dataclass, field
 from typing import Optional
 from appbasics import getUtils, ConfigSettings, StorageSettings, ConfigReader
+import logging
+from ..model import PaperstackSettings
+
+log = logging.getLogger(__name__)
 
 def initStores(docTypeStore, queryStore):
     docTypes = [ 'Article',
@@ -17,30 +20,10 @@ def initStores(docTypeStore, queryStore):
                      'Datasheet',
                      'Review', 
                      'Book',]
+    log.info(f'Initialization of docType stores')
     for i, dt in enumerate(docTypes):
         docTypeStore.add(dt, i+1)
     pass
-
-@dataclass
-class StorageSettings:
-    workDir: Optional[int] = field(init=True, default=None)
-    filesDir: Optional[str] = field(init=True, default=None)
-    sqliteFile: Optional[str] = field(init=True, default=None)
-    sqliteUrl: Optional[str] = field(init=True, default=None)
-
-    def __post_init__(self):
-        self.sqliteUrl = 'sqlite:///'
-
-@dataclass
-class PaperstackSettings:
-    configFilePath: Optional[str] = field(default=None)
-    storage: StorageSettings = field(init=True, default_factory='StorageSettings')
-
-    def __init__(self):
-        self.configFilePath = None
-        self.storage = StorageSettings()
-        print('Paperstack init called')
-        print(dir(self))
 
 class App:
     def __init__(self):
@@ -53,14 +36,17 @@ class App:
         self.documents = []
         self.querySelected = None
         self.documentSelected = None
+        log.info(f'Application created')
         
     def init(self, configPath=None):
         reader = ConfigReader(configPath=configPath,
                               configSettings=self.configSettings)
         self.settings = reader.readConfig(PaperstackSettings())
         print('storage: ', self.settings.storage)
+        log.info(f'Settings: {self.settings}')
         self.utils.init(self.settings)
         self.db = self.utils.db
+        log.info(self.db)
         initStores(self.docTypeStore, self.queryStore)
         
 

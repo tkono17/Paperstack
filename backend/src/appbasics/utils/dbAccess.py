@@ -26,6 +26,7 @@ class DbAccess:
         connect_args = {
             'check_same_thread': False
         }
+        log.info(f'Create DB engine for {self.url}')
         self.engine = create_engine(self.url, connect_args=connect_args)
         return self.engine
 

@@ -11,8 +11,9 @@ db_app = typer.Typer()
 @db_app.command('init')
 def init_db():
     log.info('Initialize database')
-    sApp = getApp()
-    sApp.db.createTables()
+    app = getApp()
+    app.init()
+    app.db.createTables()
     pass
 
 @db_app.command('reset')

@@ -31,7 +31,8 @@ def createDocument(name: str,
                    config_file: Optional[Path] = None) -> DocumentPublic:
     app = getApp()
     log.info(f'settings = {app.settings}')
-    
+
+    return
     base_file_path = None
     if file_path is not None and file_path.is_file():
         base_file_path = file_path.name
