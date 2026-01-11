@@ -4,6 +4,7 @@ import logging
 from ..app import getApp
 from .db import db_app
 from .crud_document import document_app
+from .crud_doctype import doctype_app
 
 log = logging.getLogger(__name__)
 
@@ -15,6 +16,6 @@ def main():
 
     app.add_typer(db_app, name='db')
     app.add_typer(document_app, name='document')
-    #app.add_typer(docType.app, name='docType')
+    app.add_typer(doctype_app, name='doctype')
     #app.add_typer(docCollection.app, name='docCollection')
     app()

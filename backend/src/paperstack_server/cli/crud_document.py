@@ -6,22 +6,23 @@ import shutil
 
 from ..app import getApp
 from ..model import Document, DocumentPublic, DocumentCreate, DocumentUpdate
-from ..api import document
+from ..model import PaperstackSettings
+from .. import api
 
 document_app = typer.Typer()
 log = logging.getLogger(__name__)
 
-def createFile(filePath: Path):
+def createFile(filePath: Path, settings: PaperstackSettings):
     if filePath.exists() and filePath.is_file():
-        fp2 = Path(setting.filesDir)/filePath.name
+        fp2 = Path(settings.filesDir)/filePath.name
         shutil.copy2(filePath, fp2)
     pass
 
 @document_app.command('create')
 def createDocument(name: str,
-                   authors: Optional[List[str]] = None,
+                   authors: Optional[str] = None,
                    title: Optional[str]         = None,
-                   document_type: Optional[str] = None,
+                   doctype: Optional[str] = None,
                    file_path: Optional[Path]    = None,
                    tags: Optional[List[str]]    = None,
                    eprint: Optional[str]        = None,
@@ -32,15 +33,15 @@ def createDocument(name: str,
     app = getApp()
     log.info(f'settings = {app.settings}')
 
-    return
     base_file_path = None
     if file_path is not None and file_path.is_file():
         base_file_path = file_path.name
-        createFile(file_path)
+        createFile(file_path, app.settings)
+    doctype_id = None
     doc = DocumentCreate(name=name,
                          authors=authors,
                          title=title,
-                         document_type=document_type,
+                         doctype_id=doctype_id,
                          file_path=base_file_path,
                          tags=tags,
                          eprint=eprint,
@@ -48,7 +49,7 @@ def createDocument(name: str,
                          citation=citation,
                          url=url)
     session = next(app.db.getSession())
-    return document.createDocument(doc, session)
+    return api.createDocument(doc, session)
 
 
 @document_app.command('get')
@@ -60,14 +61,14 @@ def getDocument(doc_id: int,
 
     db = DbAccess.get(setting.sqliteUrl)
     session = next(db.getSession())
-    return document.getDocument(doc_id, session)
+    return api.getDocument(doc_id, session)
 
 @document_app.command('update')
 def updateDocument(id: int,
                    name: Optional[str]          = None,
                    authors: Optional[List[str]] = None,
                    title: Optional[str]         = None,
-                   document_type: Optional[str] = None,
+                   doctype_id: Optional[str] = None,
                    file_path: Optional[str]     = None,
                    tags: Optional[List[str]]    = None,
                    eprint: Optional[str]        = None,
@@ -81,7 +82,7 @@ def updateDocument(id: int,
 
     db = DbAccess.get(setting.sqliteUrl)
     session = next(db.getSession())
-    return document.getDocument(doc_id, session)
+    return api.getDocument(doc_id, session)
 
 @document_app.command('delete')
 def deleteDocument(doc_id: int,
@@ -92,5 +93,5 @@ def deleteDocument(doc_id: int,
 
     db = DbAccess.get(setting.sqliteUrl)
     session = next(db.getSession())
-    return document.deleteDocument(doc_id, session)
+    return api.deleteDocument(doc_id, session)
 

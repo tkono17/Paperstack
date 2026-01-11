@@ -21,6 +21,10 @@ dependencies = [
   "sqlmodel",
   "uvicorn[standard]"
 ]
+[dependency-groups]
+dev = [
+    "hatchling"
+]
 
 [project.urls]
 Homepage = "https://github.com/tkono17/Paperstack"
@@ -38,3 +42,6 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = [ "src/paperstack_server", "src/appbasics" ]
+
+[tool.hatch.envs.default.scripts]
+create_test_db = "bash ./scripts/create_test_db.sh"

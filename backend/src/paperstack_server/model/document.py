@@ -16,7 +16,7 @@ class DocumentBase(SQLModel):
     name: str                 = Field(index=True)
     authors: str | None       = Field(default=None, index=True)
     title: str | None         = Field(default=None, index=True)
-    document_type: int | None = Field(default=None, index=True)
+    #doctype_id: int | None = Field(default=None, foreign_key='doctype.id')
     file_path: str | None     = Field(default=None, index=True)
     tags: str | None          = Field(default=None, index=True)
     eprint: str | None        = Field(default=None, index=True)
@@ -36,9 +36,9 @@ class DocumentCreate(DocumentBase):
 
 class DocumentUpdate(DocumentBase):
     name: str | None = None
-    author: str | None = None
+    authors: str | None = None
     title: str | None = None
-    document_type: str | None = None
+    doctype_id: str | None = None
     file_path: str | None = None
     tags: str | None = None
     arxivId: str | None = None
