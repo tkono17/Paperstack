@@ -1,47 +1,50 @@
 #-----------------------------------------------------------------------
-# Application data model
-#
-# Document (Base, Db, Public, Create, Update)
+# Application data model: Document
 #-----------------------------------------------------------------------
-from enum import Enum
-from fastapi import UploadFile
 from typing import List, Optional
-from pydantic import BaseModel
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, Relationship
+from .doctype import DocType
 
 #-----------------------------------------------------
 # Document
 #-----------------------------------------------------
 class DocumentBase(SQLModel):
-    name: str                 = Field(index=True)
-    authors: str | None       = Field(default=None, index=True)
     title: str | None         = Field(default=None, index=True)
-    document_type: int | None = Field(default=None, index=True)
+    authors: str | None       = Field(default=None, index=True)
+    doctype_id: int | None = Field(default=None, foreign_key='doctype.id')
     file_path: str | None     = Field(default=None, index=True)
     tags: str | None          = Field(default=None, index=True)
     eprint: str | None        = Field(default=None, index=True)
     doi: str | None           = Field(default=None, index=True)
-    citation: str | None      = Field(default=None, index=True)
+    reference: str | None      = Field(default=None, index=True)
     url: str | None           = Field(default=None, index=True)
 
+    
 class Document(DocumentBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
+
+    doctype: Optional['DocType'] = Relationship()
 
 class DocumentPublic(DocumentBase):
     id: int
 
+    doctype: Optional[DocType] = Field(default=None)
+
 class DocumentCreate(DocumentBase):
     #file: UploadFile | None = None
+    doctype: Optional[DocType] = Field(default=None)
     pass
 
 class DocumentUpdate(DocumentBase):
-    name: str | None = None
-    author: str | None = None
     title: str | None = None
-    document_type: str | None = None
+    authors: str | None = None
+    doctype_id: str | None = None
     file_path: str | None = None
     tags: str | None = None
-    arxivId: str | None = None
+    eprint: str | None = None
     doi: str | None = None
-    citation: str | None = None
+    reference: str | None = None
     url: str | None = None
+
+    doctype: Optional[DocType] = Field(default=None)
+
