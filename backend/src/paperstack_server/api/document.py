@@ -22,6 +22,7 @@ def createDocument(data: DocumentCreate, session: SessionDep):
 def getDocuments(session: SessionDep,
                  offset: int = 0,
                  limit: Annotated[int, Query(le=100)] = 100):
+    log.info(f'getDocument')
     documents = session.exec(select(Document).offset(offset).limit(limit)).all()
     return documents
 

@@ -16,10 +16,10 @@ def serverMain():
 
 @server_app.command()
 def startServer(port=61234):
-    config = uvicorn.Config('paperstack_server.cli.server:serverMain', port=port, log_level='info')
+    config = uvicorn.Config('paperstack_server.cli.server:webapp', port=port, log_level='info')
     server = uvicorn.Server(config)
     server.run()
-    
+
 def main():
     logging.basicConfig(level=logging.INFO,
                         format='%(name)-20s %(levelname)-8s %(message)s')
@@ -28,4 +28,3 @@ def main():
     
 if __name__ == '__main__':
     main()
-

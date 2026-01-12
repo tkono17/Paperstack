@@ -19,6 +19,8 @@ class App:
         log.info(f'Application created')
         
     def init(self, configPath=None):
+        logging.basicConfig(level=logging.INFO,
+                    format='%(name)-20s %(levelname)-8s %(message)s')
         reader = ConfigReader(configPath=configPath,
                               configSettings=self.configSettings)
         self.settings = reader.readConfig(PaperstackSettings())
