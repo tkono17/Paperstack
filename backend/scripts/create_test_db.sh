@@ -16,3 +16,11 @@ paperstack-cli document create\
 	       --eprint 'hep-ex/0507089'\
 	       --reference 'Nucl.Phys.B729:492-525,2005'\
 	       --doi '10.1016/j.nuclphysb.2005.09.021'
+
+paperstack-cli query create 'Zeus articles'\
+	       --logic 'AND'\
+	       --conditions 'document.doctype_id == 1'\
+	       --conditions 'document.authors CONTAINS ZEUS'
+	       
+
+

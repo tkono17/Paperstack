@@ -27,9 +27,9 @@ class QueryConditionUpdate(QueryConditionBase):
 # Query-condition link
 #------------------------------------------------------------------------
 class QueryConditionLink(SQLModel, table=True):
-    query_id: Optional[int] = Field(default=None, foreign_key='querycondition.id', primary_key=True)
-    condition_id: Optional[int] = Field(default=None, foreign_key='query.id', primary_key=True)
-    
+    query_id: Optional[int] = Field(default=None, foreign_key='query.id', primary_key=True)
+    condition_id: Optional[int] = Field(default=None, foreign_key='querycondition.id', primary_key=True)
+
 #------------------------------------------------------------------------
 # Query
 #------------------------------------------------------------------------
@@ -38,20 +38,19 @@ class QueryBase(SQLModel):
     logic: Optional[str] = Field(default='AND', index=True)
 
 class Query(QueryBase, table=True):
-    id: int = Field(primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
 
-    conditions: list[QueryCondition] | None = Relationship(link_model=QueryConditionLink)
+    conditions: List[QueryCondition] | None = Relationship(link_model=QueryConditionLink)
 
 class QueryPublic(QueryBase):
     id: int
-    conditions: list[QueryCondition] | None = Field(default=None)
+    conditions: List[QueryCondition] | None = Field(default=None)
 
 class QueryCreate(QueryBase):
-    conditions: list[QueryCondition] | None = Field(default=None)
-    pass
+    conditions: List[QueryCondition] | None = Field(default=None)
 
 class QueryUpdate(QueryBase):
     name: Optional[str] = None
     logic: Optional[str] = 'AND'
-    conditions: Optional[list[QueryCondition]] = Field(default=None)
+    conditions: Optional[List[QueryCondition]] = Field(default=None)
     

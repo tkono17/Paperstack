@@ -1,7 +1,11 @@
+import logging
+
 from .base import app, SessionDep
 from ..model import QueryCondition, QueryConditionPublic, QueryConditionCreate, QueryConditionUpdate
 from ..model import Query, QueryPublic, QueryCreate, QueryUpdate
+from ..model import QueryConditionLink
 
+log = logging.getLogger(__name__)
           
 #------------------------------------------------------------------------
 # Query condition
