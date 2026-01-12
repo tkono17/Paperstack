@@ -1,42 +1,3 @@
-<<<<<<< HEAD
-[project]
-name = "Paperstack-server"
-version = "0.0.1"
-authors = [
-    { name="Takanori Kono", email="takanori.kono@gmail.com" },
-]
-description = "Paperstack server application"
-readme="README.md"
-required_python = ">=3.10"
-classifiers = [
-    "Programming Language :: Python :: 3", 
-    "Operating System :: OS Independent",
-]
-license = "Apache-2.0"
-license-files = [
-    "LICENSE"
-]
-dependencies = [
-  "typer",
-  "fastapi",
-  "sqlmodel",
-  "uvicorn[standard]",
-]
-
-[project.urls]
-Homepage = "https://github.com/tkono17/Paperstack"
-
-[project.scripts]
-paperstack-cli = "paperstack_server.cli.paperstack_cli:main"
-paperstack-test = "paperstack_server.cli.test:mainTestCrud"
-
-[build-system]
-requires = [ "hatchling" ]
-build-backend = "hatchling.build"
-
-[tool.hatch.build.targets.wheel]
-packages = [ "src/paperstack_server" ]
-=======
 [project]
 name = "Paperstack-server"
 version = "0.0.1"
@@ -84,4 +45,3 @@ packages = [ "src/paperstack_server", "src/appbasics" ]
 
 [tool.hatch.envs.default.scripts]
 create_test_db = "bash ./scripts/create_test_db.sh"
->>>>>>> e77b56f8ec3a102cd20e7f214f11504fca852081

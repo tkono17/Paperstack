@@ -1,4 +1,3 @@
-=======
 from typing import Annotated
 from fastapi import Query
 from sqlmodel import select
