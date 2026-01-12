@@ -1,6 +1,7 @@
 import logging
+from typing import Optional, List
+from sqlmodel import select
 
-from appbasics import Store
 from ..model import DocType, DocTypeCreate, DocTypePublic, DocTypeUpdate
 from .base import app, SessionDep
 
@@ -16,12 +17,16 @@ def createDocType(dt: DocTypeCreate, session: SessionDep) -> DocTypePublic:
     return db_data
 
 @app.get('/doctype/', response_model=list[DocTypePublic])
-def getDocTypes(session: SessionDep):
-    return [ DocTypePublic(name=name, id=id) for name, id in store.nameToId.items()]
+def getDocTypes(where: Optional[str], session: SessionDep):
+    if where is None:
+        statement = select(DocType)
+        return session.exec(statement)
 
 @app.get('/doctype/{dt_id}', response_model=DocTypePublic)
 def getDocType(dt_id: int, session: SessionDep):
-    name = store.idToName[dt_id]
-    dt2 = DocTypePublic(name=name, id=dt_id)
-    return dt2
+    statement = select(DocType).where(DocType.id == dt_id)
+    log.info(f'statement: {statement}')
+    results = session.exec(statement)
+    return results.one()
+
 

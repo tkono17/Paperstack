@@ -1,14 +1,7 @@
 #-----------------------------------------------------------------------
-# Application data model
-#
-# DocumentType (Base, Public, Create, Update)
-# Document (Base, Public, Create, Update)
-# DocumentCollection (Base, Public, Create, Update)
+# Application data model: DocType
 #-----------------------------------------------------------------------
-from enum import Enum
-from fastapi import UploadFile
 from typing import List, Optional
-from pydantic import BaseModel
 from sqlmodel import SQLModel, Field
 
 class DocTypeBase(SQLModel):

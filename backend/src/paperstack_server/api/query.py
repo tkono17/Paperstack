@@ -1,11 +1,35 @@
-from appbasics.model import QOp, QL, QueryCondition, SimpleQuery, CompositeQuery, QCgen, Store
 from .base import app, SessionDep
+from ..model import QueryCondition, QueryConditionPublic, QueryConditionCreate, QueryConditionUpdate
+from ..model import Query, QueryPublic, QueryCreate, QueryUpdate
 
-store = Store()
-#store.add('Article', 1, QCgen.condition('dt_Article', QOp.EQ, 'docType', 'Article'))
-#store.add('Eprint', 2, QCgen.condition('dt_Eprint', QOp.EQ, 'docType', 'Eprint'))
           
-@app.get('/query/', response_model=list[SimpleQuery])
-def getSimpleQueries():
-    return [ x for x in store.idToX.values() ]
+#------------------------------------------------------------------------
+# Query condition
+#------------------------------------------------------------------------
+@app.get('/querycondition/', response_model=list[QueryConditionPublic])
+def createQueryCondition(data: QueryConditionCreate, session: SessionDep):
+    db_data = QueryCondition.model_validate(data)
+    session.add(db_data)
+    session.commit()
+    session.refresh(db_data)
+    return db_data
+
+#@app.get('/querycondition/', response_model=list[QueryConditionPublic])
+#def getQueryConditions(condition: QueryCondition):
+#    return []
+
+#------------------------------------------------------------------------
+# Query
+#------------------------------------------------------------------------
+@app.get('/query/', response_model=list[QueryPublic])
+def createQuery(data: QueryCreate, session: SessionDep):
+    db_data = Query.model_validate(data)
+    session.add(db_data)
+    session.commit()
+    session.refresh(db_data)
+    return db_data
+    
+#@app.get('/query/', response_model=list[QueryPublic])
+#def getQueries():
+
 

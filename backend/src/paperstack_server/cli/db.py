@@ -1,3 +1,4 @@
+import os
 import logging
 import typer
 import pathlib
@@ -19,6 +20,11 @@ def init_db():
 @db_app.command('reset')
 def reset_db():
     log.info('Reset database')
+    app = getApp()
+    fn = app.settings.storage.sqliteUrl.replace('sqlite:///', '')
+    if os.path.exists(fn):
+        log.info(f'  Delete existing database {fn}')
+        os.remove(fn)
     init_db()
     pass
 

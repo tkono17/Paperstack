@@ -18,4 +18,9 @@ def createDocType(name: str):
     session = next(app.db.getSession())
     return api.createDocType(doctype, session)
 
+@doctype_app.command('get')
+def getDocType(id: int):
+    app = getApp()
+    session = app.db.getSession()
+    return api.getDocType(id, next(session))
 

@@ -19,17 +19,15 @@ def createFile(filePath: Path, settings: PaperstackSettings):
     pass
 
 @document_app.command('create')
-def createDocument(name: str,
+def createDocument(title: Optional[str]   = None,
                    authors: Optional[str] = None,
-                   title: Optional[str]         = None,
                    doctype: Optional[str] = None,
                    file_path: Optional[Path]    = None,
                    tags: Optional[List[str]]    = None,
                    eprint: Optional[str]        = None,
                    doi: Optional[str]           = None,
-                   citation: Optional[str]      = None,
-                   url: Optional[str]           = None,
-                   config_file: Optional[Path] = None) -> DocumentPublic:
+                   reference: Optional[str]      = None,
+                   url: Optional[str]           = None) -> DocumentPublic:
     app = getApp()
     log.info(f'settings = {app.settings}')
 
@@ -38,15 +36,14 @@ def createDocument(name: str,
         base_file_path = file_path.name
         createFile(file_path, app.settings)
     doctype_id = None
-    doc = DocumentCreate(name=name,
+    doc = DocumentCreate(title=title,
                          authors=authors,
-                         title=title,
                          doctype_id=doctype_id,
                          file_path=base_file_path,
                          tags=tags,
                          eprint=eprint,
                          doi=doi,
-                         citation=citation,
+                         reference=reference,
                          url=url)
     session = next(app.db.getSession())
     return api.createDocument(doc, session)
@@ -65,15 +62,14 @@ def getDocument(doc_id: int,
 
 @document_app.command('update')
 def updateDocument(id: int,
-                   name: Optional[str]          = None,
-                   authors: Optional[List[str]] = None,
                    title: Optional[str]         = None,
+                   authors: Optional[List[str]] = None,
                    doctype_id: Optional[str] = None,
                    file_path: Optional[str]     = None,
                    tags: Optional[List[str]]    = None,
                    eprint: Optional[str]        = None,
                    doi: Optional[str]           = None,
-                   citation: Optional[str]      = None,
+                   reference: Optional[str]      = None,
                    url: Optional[str]           = None,
                    configFile: Optional[Path] = None) -> DocumentPublic:
     if config_file is None:

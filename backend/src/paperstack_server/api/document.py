@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 @app.post('/document/create')
 def createDocument(data: DocumentCreate, session: SessionDep):
     db_doc = Document.model_validate(data)
-    log.info(f'Create document {data.name}')
+    log.info(f'Create document {data.title}')
     log.info(f'session = {session}')
     session.add(db_doc)
     session.commit()
