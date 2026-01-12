@@ -13,7 +13,7 @@ class DbAccess:
             sApp = getApp()
             url = sApp.settings.sqliteUrl
         if cls.sInstance is None:
-            log.info(f'  Create DB instance {url}')
+            log.debug(f'  Create DB instance {url}')
             cls.sInstance = cls(url)
         x = cls.sInstance
         return x
@@ -26,6 +26,7 @@ class DbAccess:
         connect_args = {
             'check_same_thread': False
         }
+        log.debug(f'Create DB engine for {self.url}')
         self.engine = create_engine(self.url, connect_args=connect_args)
         return self.engine
 

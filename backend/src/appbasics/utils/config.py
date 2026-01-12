@@ -1,5 +1,7 @@
+import os
 import logging
 import configparser
+import dotenv
 from typing import Any, Optional
 from pathlib import Path
 from dataclasses import make_dataclass, field, asdict
@@ -7,15 +9,38 @@ from ..model import ConfigSettings
 
 log = logging.getLogger(__name__)
 
+sConfigSettings = None
+sConfigFileEnv_default = 'APPBASICS_CONFIG_FILE'
+sHomeConfigFile_default = 'appbasics.cfg'
+
+def createConfigSettings(configFileEnv: Optional[str] = sConfigFileEnv_default,
+                         homeConfigFile: Optional[str] = sHomeConfigFile_default,
+                         systemConfigPath: Optional[str] = None):
+    global sConfigSettings
+    sConfigSettings = ConfigSettings(configFileEnv,
+                                     homeConfigFile,
+                                     systemConfigPath)
+    return sConfigSettings
+
+def getConfigSettings():
+    global sConfigSettings
+    if sConfigSettings is None:
+        sConfigSettings = createConfigSettings()
+    return sConfigSettings
+
+def setConfigDefaults(configFileEnv: Optional[str] = None,
+                      homeConfigFile: Optional[str] = None):
+    global sConfigFileEnv_default
+    global sHomeConfigFile_default
+    if configFileEnv is not None:
+        sConfigFileEnv_default = configFileEnv
+    if homeConfigFile is not None:
+        sHomeConfigFile_default = homeConfigFile
+    pass
+    
 def validateConfigFile(configSettings):
     if configSettings is None:
         log.warning('ConfigSettings is None')
-        return False
-    if configSettings.configFileUsed is None:
-        log.warning(f'Configuration file is None')
-        return False
-    if not Path(configSettings.configFileUsed).exists():
-        log.warning(f'Configuration file {configSettings.configFileUsed} does not exist')
         return False
     return True
 
@@ -66,20 +91,53 @@ def makeSettings(parser):
     return settings
 
 class ConfigReader:
-    def __init__(self, configSettings):
+    def __init__(self,
+                 configPath: Optional[str]=None,
+                 configSettings: Optional[ConfigSettings] = None):
+        self.configPath = configPath
         self.configSettings = configSettings
+        self.configFileUsed = None
         self.defaultSection = 'application'
 
+        dotenv.load_dotenv('.env')
+        self.selectConfigFile()
+
+    def selectConfigFile(self):
+        self.configFileUsed = None
+        if self.configPath is not None and os.path.exists(self.configPath):
+            self.configFileUsed = self.configPath
+        elif self.configSettings is not None:
+            if self.configSettings.configFileEnv is not None:
+                envVar = self.configSettings.configFileEnv
+                if envVar in os.environ:
+                    fn = os.environ[envVar]
+                    if os.path.exists(fn):
+                        self.configFileUsed = fn
+                        log.info(f'Configuration file selected from env. variable ({envVar}), {fn}')
+            elif self.configSettings.homeConfigFile is not None:
+                fn = self.configSettings.homeConfigFile
+                fn = os.path.join(os.environ['HOME'], fn)
+                if os.path.exists(fn):
+                    self.configFileUsed = fn
+                    log.info(f'Configuration file in the home directory is selected, {fn}')
+            elif self.configSettings.systemConfigFile is not None:
+                fn = self.configSettings.systemConfigFile
+                if os.path.exists(fn):
+                    self.configFileUsed = fn
+                    log.info(f'System configuration file is selected, {fn}')
+            else:
+                log.error(f'No default method to locate the configuration file is specified')
+        return self.configFileUsed
+    
     def readConfig(self, settings=None):
-        log.info(self.configSettings)
-        if not validateConfigFile(self.configSettings):
-            log.warning('No valid config file was found. Cannot read settings')
-            return None
-        fn = self.configSettings.configFileUsed
-        with open(fn, 'r'):
+        if self.configFileUsed is None:
+            log.warning(f'No valid configuration file is found')
+            return
+        
+        with open(self.configFileUsed, 'r'):
             parser = configparser.ConfigParser()
             parser.optionxform = str
-            parser.read(fn)
+            parser.read(self.configFileUsed)
             log.info(parser.items())
             if settings is None:
                 log.info('Make Settings dynamically')
