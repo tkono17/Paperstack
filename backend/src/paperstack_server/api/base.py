@@ -8,8 +8,8 @@ from appbasics import getUtils
 def get_session():
     utils = getUtils()
     if utils is not None and utils.db is not None:
-        return utils.db.getSession()
-    return None
+        yield next(utils.db.getSession())
+
 
 SessionDep = Annotated[Session, Depends(get_session)]
 

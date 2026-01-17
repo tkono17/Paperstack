@@ -15,7 +15,7 @@ def serverMain():
     webapp()
 
 @server_app.command()
-def startServer(port=61234):
+def startServer(port: int =61234):
     config = uvicorn.Config('paperstack_server.cli.server:webapp', port=port, log_level='info')
     server = uvicorn.Server(config)
     server.run()

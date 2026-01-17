@@ -17,16 +17,21 @@ def createDocType(dt: DocTypeCreate, session: SessionDep) -> DocTypePublic:
     return db_data
 
 @app.get('/doctype/', response_model=list[DocTypePublic])
-def getDocTypes(where: Optional[str], session: SessionDep):
+def getDocTypes(session: SessionDep, where: Optional[str] = None):
+    offset: int = 0
+    limit: int = 100
+    entries: list[DocTypePublic] = []
+    log.info('getDocType')
+    print('check where', where)
     if where is None:
         statement = select(DocType)
-        return session.exec(statement)
+        results = session.exec(statement)
+        entries = results.all()
+    return entries
 
-@app.get('/doctype/{dt_id}', response_model=DocTypePublic)
-def getDocType(dt_id: int, session: SessionDep):
-    statement = select(DocType).where(DocType.id == dt_id)
-    log.info(f'statement: {statement}')
+@app.get('/doctype/{doctype_id}', response_model=DocTypePublic)
+def getDocType(doctype_id: int, session: SessionDep):
+    statement = select(DocType).where(DocType.id == doctype_id)
     results = session.exec(statement)
     return results.one()
-
 
