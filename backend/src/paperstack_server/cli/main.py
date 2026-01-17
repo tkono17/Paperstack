@@ -23,5 +23,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    
->>>>>>> e77b56f8ec3a102cd20e7f214f11504fca852081

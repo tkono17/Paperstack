@@ -89,3 +89,8 @@ class QCgen:
         return cls.composite(name, QL.OR, conditions)
         
 
+#
+# Condition('name', QOp.CONTAINS, 'part')
+# AND([1, 2, 3])
+# NOT(1)
+# 

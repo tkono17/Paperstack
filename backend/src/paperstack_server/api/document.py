@@ -1,4 +1,3 @@
-=======
 from typing import Annotated
 from fastapi import Query
 from sqlmodel import select
@@ -11,19 +10,24 @@ log = logging.getLogger(__name__)
 
 @app.post('/document/create')
 def createDocument(data: DocumentCreate, session: SessionDep):
-    db_doc = Document.model_validate(data)
-    log.info(f'Create document {data.title}')
-    log.info(f'session = {session}')
-    session.add(db_doc)
+    data_db = Document.model_validate(data)
+    session.add(data_db)
     session.commit()
-    session.refresh(db_doc)
-    return db_doc
+    session.refresh(data_db)
+    return data_db
 
-@app.get('/document', response_model=list[DocumentPublic])
+@app.get('/document/', response_model=list[DocumentPublic])
 def getDocuments(session: SessionDep,
+                 query: Optional[Query] = None, 
                  offset: int = 0,
                  limit: Annotated[int, Query(le=100)] = 100):
-    documents = session.exec(select(Document).offset(offset).limit(limit)).all()
+    documents = []
+    if query is None:
+        statement = select(Document).offset(offset).limit(limit)
+        documents = session.exec(statement).all()
+    else:
+        log.warning('Document read with query not supported yet.')
+        documents = []
     return documents
 
 @app.get('/document/{doc_id}', response_model=DocumentPublic)
