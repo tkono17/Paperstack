@@ -1,9 +1,10 @@
-from typing import Annotated
+from typing import Annotated, Optional, List
 from fastapi import Query
 from sqlmodel import select
 import logging
 
 from ..model import Document, DocumentPublic, DocumentCreate, DocumentUpdate
+from ..model import QueryConditionUpdate
 from .base import app, SessionDep
 
 log = logging.getLogger(__name__)
@@ -16,17 +17,19 @@ def createDocument(data: DocumentCreate, session: SessionDep):
     session.refresh(data_db)
     return data_db
 
-@app.get('/document/', response_model=list[DocumentPublic])
+@app.post('/document/', response_model=list[DocumentPublic])
 def getDocuments(session: SessionDep,
-                 query: Optional[Query] = None, 
+                 conditions: Optional[List[QueryConditionUpdate]] = None, 
                  offset: int = 0,
                  limit: Annotated[int, Query(le=100)] = 100):
     documents = []
-    if query is None:
+    log.info('getDoc')
+    if conditions is None:
         statement = select(Document).offset(offset).limit(limit)
         documents = session.exec(statement).all()
     else:
         log.warning('Document read with query not supported yet.')
+        log.info(conditions)
         documents = []
     return documents
 
@@ -37,7 +40,7 @@ def getDocument(doc_id: int, session: SessionDep):
         raise HTTPException(status_code=404, detail='Document not found')
     return doc
 
-@app.post('/document/update', response_model=DocumentPublic)
+@app.patch('/document/update/{doc_id}', response_model=DocumentPublic)
 def updateDocument(doc_id: int,
                    data: DocumentUpdate,
                    session: SessionDep):

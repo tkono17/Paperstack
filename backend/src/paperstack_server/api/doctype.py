@@ -4,12 +4,13 @@ from fastapi import HTTPException
 from sqlmodel import select
 
 from ..model import DocType, DocTypeCreate, DocTypePublic, DocTypeUpdate
+from ..model import QueryPublic
 from .base import app, SessionDep
 
 log = logging.getLogger(__name__)
 
 
-@app.post('/doctype/')
+@app.post('/doctype/create')
 def createDocType(dt: DocTypeCreate, session: SessionDep) -> DocTypePublic:
     db_data = DocType.model_validate(dt)
     session.add(db_data)
@@ -18,13 +19,11 @@ def createDocType(dt: DocTypeCreate, session: SessionDep) -> DocTypePublic:
     return db_data
 
 @app.get('/doctype/', response_model=list[DocTypePublic])
-def getDocTypes(session: SessionDep, where: Optional[str] = None):
+def getDocTypes(session: SessionDep, query_id: Optional[int] = None):
     offset: int = 0
     limit: int = 100
     entries: list[DocTypePublic] = []
-    log.info('getDocType')
-    print('check where', where)
-    if where is None:
+    if query_id is None:
         statement = select(DocType)
         results = session.exec(statement)
         entries = results.all()
@@ -36,7 +35,7 @@ def getDocType(doctype_id: int, session: SessionDep):
     results = session.exec(statement)
     return results.one()
 
-@app.patch('/doctype/{doctype_id}', response_model=DocTypePublic)
+@app.patch('/doctype/update/{doctype_id}', response_model=DocTypePublic)
 def updateDocType(doctype_id: int, data: DocTypeUpdate, session: SessionDep):
     data_db = session.get(DocType, doctype_id)
     if data_db is None:

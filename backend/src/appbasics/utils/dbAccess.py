@@ -34,7 +34,6 @@ class DbAccess:
         if self.engine is None:
             self.connectDb()
         with Session(self.engine) as session:
-            print('Session is ', session)
             yield session
 
     def createTables(self):

@@ -18,5 +18,3 @@ class PaperstackSettings:
     configFilePath: Optional[str] = None
     application: ApplicationSettings = field(default_factory=ApplicationSettings)
     storage: StorageSettings = field(default_factory=StorageSettings)
-    
-

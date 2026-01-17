@@ -38,7 +38,7 @@ class DocumentCreate(DocumentBase):
 class DocumentUpdate(DocumentBase):
     title: str | None = None
     authors: str | None = None
-    doctype_id: str | None = None
+    doctype_id: int | None = None
     file_path: str | None = None
     tags: str | None = None
     eprint: str | None = None
