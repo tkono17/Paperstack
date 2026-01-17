@@ -1,42 +1,3 @@
-<<<<<<< HEAD
-.DocListPanel {
-    column-width: 60%;
-    background-color: Darkgrey;
-    flex: 1 1 auto;
-}
-
-.DocListPanel h2 {
-    color: red;
-}
-
-.DocList {
-    column-width: 100%;
-    overflow: scroll;
-    scrollbar-color: blue;
-    scrollbar-width: thin;
-}
-
-.DocItem {
-    column-width: 100%;
-    background-color: Papayawhip;
-    margin: 2px 2px 2px 2px;
-    padding: 5px 10px 5px 10px;
-    border-radius: 10px;
-    text-align: left;
-}
-
-.DocItem.row1 {
-    column-width: 100%
-}
-
-.DocItem.row2 {
-    column-width: 100%
-}
-
-.DocItem.row3 {
-    column-width: 100%
-}
-=======
 .DocListPanel {
     column-width: 60%;
     background-color: Darkgrey;
@@ -73,4 +34,3 @@
 .DocItem.row3 {
     column-width: 100%
 }
->>>>>>> e77b56f8ec3a102cd20e7f214f11504fca852081
