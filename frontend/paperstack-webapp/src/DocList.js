@@ -1,22 +1,80 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import {
+  Typography,
+  Box,
+  TableContainer, Table, TableHead,
+  TableRow, TableCell, TableBody,
+  InputLabel
+} from '@mui/material';
 import './DocList.css';
 
-function DocList({documents, documentSelected}) {
-
-  const items = documents.map(x => 
-    <div className="DocItem" key={x.name}>
-      <div className="row1" key="1">{x.name} ({x.docType})</div>
-      <div className="row2" key="2">{x.authors}</div>
-      <div className="row3" key="3">{x.title}</div>
-    </div>);
-
+function DocItemRow(props) {
+  const doc = props.document;
+  console.log('doc:', props.document);
+  console.log('headers:', props.headers);
   return (
-    <div className="DocListPanel">
-      <h2>Document list</h2>
-      <div className="DocList">
-        {items}
-      </div>
-    </div>
+    <TableRow>
+      <TableCell>
+        <InputLabel>{doc.id}</InputLabel>
+      </TableCell>
+      <TableCell>
+        <InputLabel>{doc.title}</InputLabel>
+      </TableCell>
+      <TableCell>
+        <InputLabel>{doc.authors.join(', ')}</InputLabel>
+      </TableCell>
+      <TableCell>
+        <InputLabel>{doc.docType}</InputLabel>
+      </TableCell>
+      <TableCell>
+        <InputLabel>{doc.tags.join(', ')}</InputLabel>
+      </TableCell>
+    </TableRow>
+  );
+}
+
+function DocList() {
+  //{documents, documentSelected}
+  const headers = [
+    'id', 'title', 'authors', 'document type', 'tags'
+  ]
+  const documents = [
+    {
+      'id': 1,
+      'title': 'Document A',
+      'authors': ['T. Kono'],
+      'docType': 'Article',
+      'tags': ['Tag1',]
+    },
+    {
+      'id': 2,
+      'title': 'Document B',
+      'authors': ['T. Kono', 'Someone else'],
+      'docType': ['Book'],
+      'tags': ['Tag2', 'Tag3']
+    }
+  ]
+  return (
+    <Box>
+      <Typography variant="h4">List</Typography>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              {headers.map((x) =>
+                <TableCell>
+                  <InputLabel>{x}</InputLabel>
+                </TableCell>
+              )}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {documents.map((x) => (
+              <DocItemRow headers={headers} document={x} />))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 }
 

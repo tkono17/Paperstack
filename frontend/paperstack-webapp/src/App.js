@@ -1,8 +1,8 @@
 //import logo from './logo.svg';
 import {useState} from 'react';
+import { Container, Grid, CssBaseline, Box, Typography } from '@mui/material'
 import './App.css';
-import QueryPanel from './QueryPanel.js';
-import DocList from './DocList.js';
+import QueryList from './QueryList.js';
 import DocProperties from './DocProperties.js';
 
 
@@ -16,11 +16,18 @@ function App() {
   });
 
   return (
-    <div className="App">
-    <QueryPanel documentsRetrieved={(x) => setDocuments(x)}/>
-    <DocList documents={documents} documentSelected={(x) => setCurrentDoc(x)} />
-    <DocProperties document={currentDoc} />
-    </div>
+    <Container maxWidth="lg" justifyContents="center">
+      <CssBaseline />
+      <Typography  fullWidth={true} variant="h2" color="#125644" backgroundColor="#88cc88">Paperstack</Typography>
+      <Grid container>
+        <Grid size={7}>
+          <QueryList />
+        </Grid>
+        <Grid size={5}>
+          <DocProperties document={currentDoc} />
+        </Grid>
+      </Grid>
+    </Container>
   );
 
 }
