@@ -3,8 +3,8 @@ from typing import Optional, TypeVar
 
 @dataclass
 class ObjId:
+    value: Optional[str|int|float]
     key: Optional[str] = None
-    value: Optional[str|int|float] = None
 
 Query = TypeVar('Query')
 
