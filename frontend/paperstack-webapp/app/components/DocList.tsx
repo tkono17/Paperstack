@@ -55,7 +55,7 @@ function DocList() {
     }
   ]
   return (
-    <Box>
+    <Box backgroundColor="#dcd8e1" padding={1} borderRadius={1}>
       <Typography variant="h4">List</Typography>
       <TableContainer>
         <Table>

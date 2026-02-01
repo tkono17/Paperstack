@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 import './DocProperties.css';
 
-function valueField(name, value) {
+function valueField(name : string, value : string | number) {
   const vname = 'value-' + name;
   let vfield;
   console.log('name = ' + name);
@@ -13,10 +13,10 @@ function valueField(name, value) {
     console.log(' is authors')
     vfield = <textarea className="PropValue" type="text" key={vname}
       onKeyUp={(event) => {
-        const padding = 0;
-        event.target.style.height = "inherit";
-        console.log('Text area changed, height=' + String(event.target.scrollHeight));
-        event.target.style.height = (event.target.scrollHeight - padding) + 'px';
+//        const padding = 0;
+//        event.target.style.height = "inherit";
+//        console.log('Text area changed, height=' + String(event.target.scrollHeight));
+//        event.target.style.height = (event.target.scrollHeight - padding) + 'px';
       }} defaultValue={value} />;
   } else {
     console.log('  others');
@@ -36,14 +36,13 @@ function listUpdated(text) {
 }
 
 function propField(name, value) {
-  var field = ''
-  field = valueField(name, value);
+  var field = valueField(name, value);
   return field;
 }
 
 function DocProperties({ document }) {
   console.log('Document updated...' + document);
-  var kvlist = [];
+  var kvlist : string[][] = [];
   if (document === null) {
     kvlist = [];
   } else {

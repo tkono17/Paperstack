@@ -2,8 +2,8 @@
 import {useState} from 'react';
 import { Container, Grid, CssBaseline, Box, Typography } from '@mui/material'
 import './App.css';
-import QueryList from './QueryList.js';
-import DocProperties from './DocProperties.js';
+import QueryList from './QueryList';
+import DocProperties from './DocProperties';
 
 
 function App() {
