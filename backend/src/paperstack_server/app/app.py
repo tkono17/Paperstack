@@ -10,9 +10,6 @@ class App:
         self.configSettings = ConfigSettings(configFileEnv='PAPERSTACK_CONFIG',
                                              homeConfigFile='.paperstack.cfg')
         self.utils = getUtils()
-        #self.docTypeStore = self.utils.addStore('DocType')
-        #self.queryStore = self.utils.addStore('Query')
-        #
         self.documents = []
         self.querySelected = None
         self.documentSelected = None
@@ -24,7 +21,7 @@ class App:
         reader = ConfigReader(configPath=configPath,
                               configSettings=self.configSettings)
         self.settings = reader.readConfig(PaperstackSettings())
-        log.debug(f'Settings: {self.settings}')
+        log.info(f'Settings: {self.settings}')
         self.utils.init(self.settings)
         self.db = self.utils.db
         log.info(self.db)

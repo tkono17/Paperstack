@@ -19,7 +19,8 @@ dependencies = [
   "typer",
   "fastapi",
   "sqlmodel",
-  "uvicorn[standard]"
+  "uvicorn[standard]",
+  "python-multipart"
 ]
 [dependency-groups]
 dev = [

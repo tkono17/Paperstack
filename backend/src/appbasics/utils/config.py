@@ -97,7 +97,6 @@ class ConfigReader:
         self.configPath = configPath
         self.configSettings = configSettings
         self.configFileUsed = None
-        self.defaultSection = 'application'
 
         dotenv.load_dotenv('.env')
         self.selectConfigFile()
@@ -134,20 +133,18 @@ class ConfigReader:
             log.warning(f'No valid configuration file is found')
             return
         
+        if settings is None:
+            log.info('Make Settings dynamically')
+            settings = makeSettings(parser)
+        addValues(settings, { 'configFilePath': self.configFileUsed })
+        
         with open(self.configFileUsed, 'r'):
             parser = configparser.ConfigParser()
             parser.optionxform = str
             parser.read(self.configFileUsed)
             log.info(parser.items())
-            if settings is None:
-                log.info('Make Settings dynamically')
-                settings = makeSettings(parser)
             for key in parser.sections():
                 section = parser[key]
                 log.info(f'  Add section {key} -> {section}')
-                if section.name == self.defaultSection:
-                    addValues(settings, section)
-                else:
-                    addSection(settings, section)
+                addSection(settings, section)
         return settings
-
